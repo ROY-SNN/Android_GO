@@ -1,7 +1,11 @@
-# Android_GO
-Android_Demo20210518
+# =============================================================================================================================================================================
 
-# 2021.05.18Demo登录页面的设计流程
+# Android_GO
+
+#### 生产实习2021.05.17~2021.05.19的内容(持续更新ing)
+
+# =============================================================================================================================================================================
+# 2021.05.18：登录页面的设计流程
 【ps】创建工程和模块省略
 
 # 1.设计流程
@@ -161,6 +165,332 @@ manifests文件夹内的AndroidManifest.xml文件，注意其中的<activity></a
 
 
 
+# =============================================================================================================================================================================
+
+# 2021.05.19：轻量级存储、远程登录及获取插座权限
+【ps】下列所以代码均为最简代码，只有将最简的调试好，再添加上之前的多种功能才能更清楚的理解！
+
+## 1.登录页面“记住密码”功能
+### 1.1 轻量级的数据存储SharedPreferences简介
+SharedPreferences是一种轻量级的数据存储方式，采用**键值对**的存储方式。SharedPreferences只能存储少量数据，大量数据不能使用该方式存储，支持存储的数据类型：booleans、floats、ints、longs、strings，将其存储到一个XML文件中的，路径在/data/data/<packagename>/shared_prefs/。
+
+### 1.2 SharedPreferences的基本用法
+1. 【获取SharedPreferences对象】：利用getSharedPreferences()方法
+1. 【数据更新】：利用edit()结合putString()方法
+1. 【数据获取】：利用getString()
+
+
+[数据存储SharedPreferences的操作流程参考1](https://www.cnblogs.com/fanglongxiang/p/11390013.html "数据存储SharedPreferences的操作流程")
+
+[数据存储SharedPreferences的操作流程参考2](https://www.cnblogs.com/fanglongxiang/p/11390013.html "数据存储SharedPreferences的操作流程")
+
+
+
+### 1.3 练习：登陆页面实现“记住密码”的功能
+关于控件CheckBox的放置这一步骤不再详细描述，注意id值的问题就可以了，接下来的步骤步骤大致如下：
+
+1. UI设计
+1. 创建CheckBox类型的成员变量、并获取具体对应的CheckBox
+1. 创建一个新的类AboxCons，来利用常量存放“键”的名称
+1. 获取SharedPreferences对象：getSharedPreferences()方法
+1. 数据获取：getString方法
+1. 数据更新：edit()、putString()、commit()三个方法
+
+
+```java
+public class AboxCons {
+    public static String SP_USER_NAME = "name";          // 用于Preferences文件中的键
+    public static String SP_USER_PSD  = "pwd";           // 用于Preferences文件中的键
+}
+```
+
+【ps】这里的SP_USER_NAME、SP_USER_PSD一定要有值，不能为空，如果为空后面更新数据的时候，传入两个空的键，等到想利用键获取数据的时候，将会无法根据键来匹配正确的值。
+
+```java
+public class MainActivity extends AppCompatActivity {
+	
+	private EditText editTextUserName;  
+    private EditText editTextUserPwd;   
+	// ==================================================================================
+	private CheckBox checkBoxRemmberMe;  // 【登录页面】记住我！
+    private SharedPreferences sp;        //  1.SharedPreferences对象
+	// ==================================================================================
+	
+	@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        findView();
+		// ==================================================================================
+		// 1.【获取SharedPreferences对象】：
+		//      参数1：数据存储的文件名； 参数2：操作模式
+        sp = getSharedPreferences("userinfo", MODE_PRIVATE);
+		// 2.【数据获取sp.getString】
+		//     参数1：键；参数2：如果文件中没有找到对应的键，则用“~~~~~”代替；如果存在，则取出
+		// 【ps】这里我们将获取数据与将数据放置到文本框内写在一起了，所以看的有点多。
+        editTextUserName.setText(sp.getString(AboxCons.SP_USER_NAME, "nobody"));
+        editTextUserPwd.setText(sp.getString(AboxCons.SP_USER_PSD, "nopass"));
+		// ==================================================================================
+    }
+	
+	private void findView() {
+        editTextUserName  = (EditText) findViewById(R.id.editTextUserName);
+        editTextUserPwd   = (EditText) findViewById(R.id.editTextUserPwd);
+		// ==================================================================================
+        checkBoxRemmberMe = (CheckBox) findViewById(R.id.checkBoxRemmberMe); // 获取“记住我”对应checkBox的值
+		// ==================================================================================
+    }
+	
+	public void onloginButtononCliked(View view){
+        boolean authOk = false;
+        authOk = loginAuth(editTextUserName.getText().toString(),editTextUserPwd.getText().toString());
+        if(authOk){
+			// ==================================================================================
+            // 如果登录成功
+            if(checkBoxRemmberMe.isChecked()){ // 且“记住我”已经勾选
+				// 3.【数据更新】
+				//   putString()方法  参数1：键；参数2：值
+				//   【ps】edit()、putString()、commit()三个方法结合使用。
+                sp.edit().putString(AboxCons.SP_USER_NAME, editTextUserName.getText().toString())
+                        .putString(AboxCons.SP_USER_PSD, editTextUserPwd.getText().toString())
+                        .commit();
+            }
+			// ==================================================================================
+            Intent intert = new Intent(MainActivity.this,Main2Activity.class);
+            intert.putExtra("useName",editTextUserName.getText().toString());
+            startActivity(intert);
+            Toast.makeText(this, "登陆成功", Toast.LENGTH_LONG).show();
+        }else{
+			~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~略~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        }
+    }
+	
+	public boolean loginAuth(String userName, String userPwd){~~~~~略~~~~~}
+}
+```
+
+
+
+
+
+## 2.“远程连接网络”的登录
+
+之前，我们编写的程序登陆方式都是根据本地某个变量中，定义好的用户名与密码进行验证登录；但是实际情况是：让程序在接入对应网络的情况下，可以访问网络上的数据(提前在网络上注册好的用户名与密码)然后进行验证与登录，进而控制传感器进行传输与接收数据的功能。
+
+### 2.1 导入libABSDK0630.jar
+1. 以Project视角查看工程目录
+1. 找到对应的module-libs，将.jar包复制进去
+1. 右键.jar包再添加进去
+
+### 2.2 查看文件：ABSDK接口
+
+|  0   |  取得实例对象 |
+|  ----  | ----  |
+| 名称  | ABSDK getInstance() |
+| 参数  | - |
+| 返回值  | ABSDK实例 |
+
+
+|  1   |  登录 |
+|  ----  | ----  |
+| 名称  | ABRet loginWithUsername(String username, String password) |
+| 参数  | username:用户名、password:密码 |
+| 返回值  | ABRet: code String 处理结果(00000成功，00000以外失败)、token String ~~ 等 |
+
+|  CODE   |  含义 |
+|  ----  | ----  |
+| 00000  | 处理成功 |
+| 20000  | 请求超时 |
+| 20001  | 用户名或密码不存在 |
+| 20002  | 用户不存在或已暂停使用 |
+| 20003  | 登录失败次数过多 |
+| 20004  | 用户名或密码不正确 |
+
+
+【ps】注意一个token的变量(属于密钥)，如果你的程序没有从loginWithUsername()进入，而是从别的地方强行进入，你不会有token值(非法入侵)，所以后续的工作都会出现问题！！！
+
+### 2.3 根据接口文件编写程序
+
+1. 创建一个类LoginAsysnTask，继承AsyncTask
+1. 创建这个类的含参构造方法
+1. 重写doInBackground方法
+1. 重写onPostExecute方法
+1. 实例化新建的LoginAsysnTask类
+1. 执行！！！
+
+【ps】
+
+1. 有关函数间具体的运行关系，其实不需要掌握，例如：getInstance()获取实例化对象的时候，这里与反射机制十分类似，没有必要深挖，就我们初学阶段只要掌握如何调用各个接口就可以了。如果想了解一下反射机制可以参考[lys同学对反射机制的认识与理解](http://www.lysblog.cn:8080/blog/58 "lys同学对反射机制的认识与理解")。
+1. 下列代码我省略了“记住密码”、“将本页面的数值传入下一页面”等功能，仅保留了登陆成功页面跳转的功能，方便大家理解。
+
+```java
+public class MainActivity extends AppCompatActivity {
+    private EditText editTextUserName;  
+    private EditText editTextUserPwd;   
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+		
+        findView();
+    }
+
+    private void findView() {
+        editTextUserName  = (EditText) findViewById(R.id.editTextUserName);
+        editTextUserPwd   = (EditText) findViewById(R.id.editTextUserPwd);
+    }
+
+    public void onloginButtononCliked(View view){
+        String userName = editTextUserName.getText().toString();
+        String userPwd  = editTextUserPwd.getText().toString();
+
+		// 5.实例化新建的LoginAsysnTask类，将获取的用户名与密码传入构造器
+        LoginAsysnTask loginAsysnTask = new LoginAsysnTask(userName,userPwd);
+		// 6.执行！！！
+        loginAsysnTask.execute();
+        // 【ps】注意excute之后不能有语句
+    }
+
+	// 1.创建一个类，继承AsyncTask(注意：泛型！)
+    class LoginAsysnTask extends AsyncTask<String, Void, ABRet> {
+        private String m_userName;
+        private String m_userPwd;
+		
+		// 2.创建含参(2个参数)构造方法
+		// 【ps】上课的时候，第一遍编写的时候没有创建这个构造方法，是因为继承的AsyncTask内部已经存在含有泛型的构造方法，它的好处是无论多少个参数都可以直接构造，将变量传进对象之中。而我们这里这样写的缺点：只能传入定义个数的参数。
+        public LoginAsysnTask(String m_userName, String m_userPwd) {
+            this.m_userName = m_userName;
+            this.m_userPwd = m_userPwd;
+        }
+		
+		// 3.重写doInBackground方法
+		//   利用ABSDK.getInstance()获取实例对象；利用loginWithUsername()登录
+		//         参数1，2：从输入框内取到的用户名、密码
+		//         返回值：ABRet类型，它含有4个成员变量：code、msg、dicdatas、token
+        @Override
+        protected ABRet doInBackground(String... userInfo) {
+            ABRet abRet = ABSDK.getInstance().loginWithUsername(m_userName, m_userPwd);
+            return abRet;
+        }
+		
+		// 4.重写onPostExecute方法
+		// 【ps】doInBackground方法的返回值ABRet会自动传入onPostExecute方法，我们不需要考虑如何传入。
+        @Override
+        protected void onPostExecute(ABRet abRet) {
+            super.onPostExecute(abRet);
+			
+			// 如果从doInBackground方法中拿到的返回值abRet中的code="00000"，则登录成功
+            if (abRet.getCode().equals("00000")){
+                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                startActivity(intent);
+            }else{
+				// 如果从doInBackground方法中拿到的返回值abRet中的code不是"00000"，
+				// 则登录失败，并打印错误代码(方便以后我们进行调试，做进一步修正或改成对应的文字说明来提醒用户)
+                Toast.makeText(MainActivity.this,"登录失败"+abRet.getCode(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+
+```
+
+
+### 2.4 测试程序
+
+1. 电脑连接对应的网络(一共有2个网络)
+1. 通过ip地址访问后台，进行用户的创建
+1. 将程序下载到安卓手机(不要使用虚拟手机，太慢！！！！)
+1. 安卓手机需要连接对应的网络
+1. 输入刚刚创建的用户名与密码，登录
+
+
+
+
+
+## 3.登录后，“获取控制插座的权限”
+我们在2中成功实现了远程登录，现在我们远程距离控制“插座”还差2步：(1)获取控制权(2)传达指令，这一节我们仅仅来实现获取控制权这一步骤。
+
+### 3.1 查看文件：ABSDK接口
+
+|  12   |  取得插座状态（请在登录后使用） |
+|  ----  | ----  |
+| 名称  | ABRet getSockStatus(String soDevName) |
+| 参数  | soDevName: 插座名称 |
+| 返回值  | ABRet: code String 处理结果(00000成功，00000以外失败)、status String 插座状态(0:关闭 1:开启)~等|
+
+|  CODE   |  含义 |
+|  ----  | ----  |
+| 10001  | TOKEN不存在或长度不足 |
+| 10002  | TOKEN已失效 |
+| 20502  | 插座设备不存在 |
+| 20503  | 插座设备控制失败 |
+| 20504  | 插座设备已离线 |
+
+### 3.2 根据接口文件编写程序
+
+1. 创建一个类SocketStatusTask，继承AsyncTask
+1. 重写doInBackground方法
+1. 重写onPostExecute方法
+1. 实例化新建的LoginAsysnTask类
+1. 执行！！！
+
+
+```java
+public class Main2Activity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
+    }
+
+    public void ChaZuoButtononCliked(View view){
+		// 4.实例化新建的SocketStatusTask类
+        SocketStatusTask socketStatusTask = new SocketStatusTask();
+		// 5.执行！！！
+        socketStatusTask.execute();
+        //注意excute之后不能有语句
+    }
+	
+	// 1.创建一个类，继承AsyncTask(注意：泛型！)
+    class SocketStatusTask extends AsyncTask<Void, Void, ABRet> {
+		
+		// 2.重写doInBackground方法
+		//	利用ABSDK.getInstance()获取实例对象；利用getSockStatus()选择设备
+		//       参数：插座设备的名称(需要在后台查看设备的名称！！！)
+        @Override
+        protected ABRet doInBackground(Void... Voids) {
+            ABRet abRet = ABSDK.getInstance().getSockStatus("s1");
+            return abRet;
+        }
+		
+		// 3.重写onPostExecute方法
+        @Override
+        protected void onPostExecute(ABRet abRet) {
+            super.onPostExecute(abRet);
+			
+            if (abRet.getCode().equals("00000")){
+                Toast.makeText(Main2Activity.this,"控制插座权限获取成功",
+                        Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(Main2Activity.this,"控制插座权限获取失败"+abRet.getCode(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+```
+
+### 3.3 测试
+在上一步手机登录后按button后，如果屏幕浮现出“控制插座权限获取成功”，则成功；如果屏幕浮现"控制插座权限获取失败"，根据错误代码通过查表，继续调试！
+
+
+
+
+
+# =============================================================================================================================================================================
 
 
 
