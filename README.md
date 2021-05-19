@@ -59,19 +59,19 @@ public void onloginButtononCliked(View view){
 
 ```java
 public class MainActivity extends AppCompatActivity {
-	// 1.创建想要获取字符串所在控件的对象类型
-	private EditText editTextUserName;  
+    // 1.创建想要获取字符串所在控件的对象类型
+    private EditText editTextUserName;  
 
-	@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-		// 2.通过finView找到控件对应的对象(ps:版本问题需要强制转换)
+	// 2.通过finView找到控件对应的对象(ps:版本问题需要强制转换)
         editTextUserName = (EditText) findViewById(R.id.editTextUserName);
-		// 3.利用.getText().toString()方法获取对象中的字符串值
-		// [PS]这是举个例子，正式代码引用控件对象的值，不放在这里。
-		editTextUserName = editTextUserName.getText().toString()
+	// 3.利用.getText().toString()方法获取对象中的字符串值
+	// [PS]这是举个例子，正式代码引用控件对象的值，不放在这里。
+	editTextUserName = editTextUserName.getText().toString()
     }
 }
 ```
@@ -120,18 +120,18 @@ startActivity(intert);
 Main2Activity.java文件下的代码：
 ```java
 public class Main2Activity extends AppCompatActivity {
-	private TextView textViewshowusername;
+    private TextView textViewshowusername;
 	
-	@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 		
-		textViewshowusername = (TextView) findViewById(R.id.textViewshowusername);
-		// 1.首先，获取Intent(意图)的对象
-		Intent intent = getIntent();
-		// 2.然后，利用getStringExtra()方法来获取对应的值
-       textViewshowusername.setText(intent.getStringExtra("useName"));
+	textViewshowusername = (TextView) findViewById(R.id.textViewshowusername);
+	// 1.首先，获取Intent(意图)的对象
+	Intent intent = getIntent();
+	// 2.然后，利用getStringExtra()方法来获取对应的值
+        textViewshowusername.setText(intent.getStringExtra("useName"));
     }
 }
 ```
@@ -211,53 +211,53 @@ public class AboxCons {
 ```java
 public class MainActivity extends AppCompatActivity {
 	
-	private EditText editTextUserName;  
+    private EditText editTextUserName;  
     private EditText editTextUserPwd;   
-	// ==================================================================================
-	private CheckBox checkBoxRemmberMe;  // 【登录页面】记住我！
+    // ==================================================================================
+    private CheckBox checkBoxRemmberMe;  // 【登录页面】记住我！
     private SharedPreferences sp;        //  1.SharedPreferences对象
-	// ==================================================================================
+    // ==================================================================================
 	
-	@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findView();
-		// ==================================================================================
-		// 1.【获取SharedPreferences对象】：
-		//      参数1：数据存储的文件名； 参数2：操作模式
+	// ==================================================================================
+	// 1.【获取SharedPreferences对象】：
+	//      参数1：数据存储的文件名； 参数2：操作模式
         sp = getSharedPreferences("userinfo", MODE_PRIVATE);
-		// 2.【数据获取sp.getString】
-		//     参数1：键；参数2：如果文件中没有找到对应的键，则用“~~~~~”代替；如果存在，则取出
-		// 【ps】这里我们将获取数据与将数据放置到文本框内写在一起了，所以看的有点多。
+	// 2.【数据获取sp.getString】
+	//     参数1：键；参数2：如果文件中没有找到对应的键，则用“~~~~~”代替；如果存在，则取出
+	// 【ps】这里我们将获取数据与将数据放置到文本框内写在一起了，所以看的有点多。
         editTextUserName.setText(sp.getString(AboxCons.SP_USER_NAME, "nobody"));
         editTextUserPwd.setText(sp.getString(AboxCons.SP_USER_PSD, "nopass"));
-		// ==================================================================================
+	// ==================================================================================
     }
 	
-	private void findView() {
+    private void findView() {
         editTextUserName  = (EditText) findViewById(R.id.editTextUserName);
         editTextUserPwd   = (EditText) findViewById(R.id.editTextUserPwd);
-		// ==================================================================================
+	// ==================================================================================
         checkBoxRemmberMe = (CheckBox) findViewById(R.id.checkBoxRemmberMe); // 获取“记住我”对应checkBox的值
-		// ==================================================================================
+	// ==================================================================================
     }
 	
-	public void onloginButtononCliked(View view){
+    public void onloginButtononCliked(View view){
         boolean authOk = false;
         authOk = loginAuth(editTextUserName.getText().toString(),editTextUserPwd.getText().toString());
         if(authOk){
-			// ==================================================================================
+	    // ==================================================================================
             // 如果登录成功
             if(checkBoxRemmberMe.isChecked()){ // 且“记住我”已经勾选
-				// 3.【数据更新】
-				//   putString()方法  参数1：键；参数2：值
-				//   【ps】edit()、putString()、commit()三个方法结合使用。
+		// 3.【数据更新】
+		//   putString()方法  参数1：键；参数2：值
+	        //   【ps】edit()、putString()、commit()三个方法结合使用。
                 sp.edit().putString(AboxCons.SP_USER_NAME, editTextUserName.getText().toString())
                         .putString(AboxCons.SP_USER_PSD, editTextUserPwd.getText().toString())
                         .commit();
             }
-			// ==================================================================================
+	    // ==================================================================================
             Intent intert = new Intent(MainActivity.this,Main2Activity.class);
             intert.putExtra("useName",editTextUserName.getText().toString());
             startActivity(intert);
@@ -267,11 +267,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 	
-	public boolean loginAuth(String userName, String userPwd){~~~~~略~~~~~}
+    public boolean loginAuth(String userName, String userPwd){~~~~~略~~~~~}
 }
 ```
-
-
 
 
 
@@ -347,9 +345,9 @@ public class MainActivity extends AppCompatActivity {
         String userName = editTextUserName.getText().toString();
         String userPwd  = editTextUserPwd.getText().toString();
 
-		// 5.实例化新建的LoginAsysnTask类，将获取的用户名与密码传入构造器
+	// 5.实例化新建的LoginAsysnTask类，将获取的用户名与密码传入构造器
         LoginAsysnTask loginAsysnTask = new LoginAsysnTask(userName,userPwd);
-		// 6.执行！！！
+	// 6.执行！！！
         loginAsysnTask.execute();
         // 【ps】注意excute之后不能有语句
     }
@@ -359,36 +357,36 @@ public class MainActivity extends AppCompatActivity {
         private String m_userName;
         private String m_userPwd;
 		
-		// 2.创建含参(2个参数)构造方法
-		// 【ps】上课的时候，第一遍编写的时候没有创建这个构造方法，是因为继承的AsyncTask内部已经存在含有泛型的构造方法，它的好处是无论多少个参数都可以直接构造，将变量传进对象之中。而我们这里这样写的缺点：只能传入定义个数的参数。
+	// 2.创建含参(2个参数)构造方法
+	// 【ps】上课的时候，第一遍编写的时候没有创建这个构造方法，是因为继承的AsyncTask内部已经存在含有泛型的构造方法，它的好处是无论多少个参数都可以直接构造，将变量传进对象之中。而我们这里这样写的缺点：只能传入定义个数的参数。
         public LoginAsysnTask(String m_userName, String m_userPwd) {
             this.m_userName = m_userName;
             this.m_userPwd = m_userPwd;
         }
 		
-		// 3.重写doInBackground方法
-		//   利用ABSDK.getInstance()获取实例对象；利用loginWithUsername()登录
-		//         参数1，2：从输入框内取到的用户名、密码
-		//         返回值：ABRet类型，它含有4个成员变量：code、msg、dicdatas、token
+	// 3.重写doInBackground方法
+	//   利用ABSDK.getInstance()获取实例对象；利用loginWithUsername()登录
+	//         参数1，2：从输入框内取到的用户名、密码
+	//         返回值：ABRet类型，它含有4个成员变量：code、msg、dicdatas、token
         @Override
         protected ABRet doInBackground(String... userInfo) {
             ABRet abRet = ABSDK.getInstance().loginWithUsername(m_userName, m_userPwd);
             return abRet;
         }
 		
-		// 4.重写onPostExecute方法
-		// 【ps】doInBackground方法的返回值ABRet会自动传入onPostExecute方法，我们不需要考虑如何传入。
+	// 4.重写onPostExecute方法
+	// 【ps】doInBackground方法的返回值ABRet会自动传入onPostExecute方法，我们不需要考虑如何传入。
         @Override
         protected void onPostExecute(ABRet abRet) {
             super.onPostExecute(abRet);
 			
-			// 如果从doInBackground方法中拿到的返回值abRet中的code="00000"，则登录成功
+	    // 如果从doInBackground方法中拿到的返回值abRet中的code="00000"，则登录成功
             if (abRet.getCode().equals("00000")){
                 Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                 startActivity(intent);
             }else{
-				// 如果从doInBackground方法中拿到的返回值abRet中的code不是"00000"，
-				// 则登录失败，并打印错误代码(方便以后我们进行调试，做进一步修正或改成对应的文字说明来提醒用户)
+		// 如果从doInBackground方法中拿到的返回值abRet中的code不是"00000"，
+		// 则登录失败，并打印错误代码(方便以后我们进行调试，做进一步修正或改成对应的文字说明来提醒用户)
                 Toast.makeText(MainActivity.this,"登录失败"+abRet.getCode(),
                         Toast.LENGTH_SHORT).show();
             }
@@ -449,26 +447,26 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void ChaZuoButtononCliked(View view){
-		// 4.实例化新建的SocketStatusTask类
+	// 4.实例化新建的SocketStatusTask类
         SocketStatusTask socketStatusTask = new SocketStatusTask();
-		// 5.执行！！！
+	// 5.执行！！！
         socketStatusTask.execute();
         //注意excute之后不能有语句
     }
 	
-	// 1.创建一个类，继承AsyncTask(注意：泛型！)
+// 1.创建一个类，继承AsyncTask(注意：泛型！)
     class SocketStatusTask extends AsyncTask<Void, Void, ABRet> {
 		
-		// 2.重写doInBackground方法
-		//	利用ABSDK.getInstance()获取实例对象；利用getSockStatus()选择设备
-		//       参数：插座设备的名称(需要在后台查看设备的名称！！！)
+	// 2.重写doInBackground方法
+	//	利用ABSDK.getInstance()获取实例对象；利用getSockStatus()选择设备
+	//       参数：插座设备的名称(需要在后台查看设备的名称！！！)
         @Override
         protected ABRet doInBackground(Void... Voids) {
             ABRet abRet = ABSDK.getInstance().getSockStatus("s1");
             return abRet;
         }
 		
-		// 3.重写onPostExecute方法
+	// 3.重写onPostExecute方法
         @Override
         protected void onPostExecute(ABRet abRet) {
             super.onPostExecute(abRet);
