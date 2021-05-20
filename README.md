@@ -6,6 +6,25 @@
 
 ![avatar](https://static01.imgkr.com/temp/b0fc07382af549db8f512002c4aa15a3.jpg) 
 
+
+
+【ps】常用的网站资源：
+
+[【画图】](https://www.processon.com/"【画图】")
+
+[【UI素材】阿里巴巴矢量图标库](https://www.iconfont.cn/"【UI素材】阿里巴巴矢量图标库")
+[【UI素材】开源PNG图片库](https://pluspng.com/"【UI素材】开源PNG图片库")
+[【UI素材】Emoji表情](https://emoji.svend.cc/"【UI素材】Emoji表情")
+[【UI素材】二维码美化](https://mh.cli.im/"【UI素材】二维码美化")
+[【UI素材】二维码生成器](http://www.fly63.com/tool/ewm/"【UI素材】二维码生成器")
+[【UI素材】二维码解码器](http://www.fly63.com/php/decoder/"【UI素材】二维码解码器")
+[【UI素材】LOGO设计](http://www.uugai.com/"【UI素材】LOGO设计")
+[【UI素材】艺术字生成](https://www.qt86.com/"【UI素材】艺术字生成")
+
+[【开发】正则表达式可视化](https://jex.im/regulex/#!flags=&re=%5E(a%7Cb)*%3F%24"【开发】正则表达式可视化")
+[【开发】BASE64加密](https://base64.supfree.net/"【开发】BASE64加密")
+[【开发】MD5加密](https://www.zxgj.cn/g/md5"【开发】MD5加密")
+
 # ===================================
 # 2021.05.18：登录页面的设计流程
 【ps】创建工程和模块省略
