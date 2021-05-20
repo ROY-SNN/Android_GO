@@ -4,35 +4,22 @@
 
 #### 生产实习2021.05.17~2021.05.19的内容(持续更新ing)
 
-![avatar](https://static01.imgkr.com/temp/b0fc07382af549db8f512002c4aa15a3.jpg) 
+## 常用的网站资源：
 
-
-
-【ps】常用的网站资源：
-
-[【画图】](https://www.processon.com/"【画图】")	
-
-[【UI素材】阿里巴巴矢量图标库](https://www.iconfont.cn/"【UI素材】阿里巴巴矢量图标库")	
-
-[【UI素材】开源PNG图片库](https://pluspng.com/"【UI素材】开源PNG图片库")	
-
-[【UI素材】Emoji表情](https://emoji.svend.cc/"【UI素材】Emoji表情")	
-
-[【UI素材】二维码美化](https://mh.cli.im/"【UI素材】二维码美化")	
-
-[【UI素材】二维码生成器](http://www.fly63.com/tool/ewm/"【UI素材】二维码生成器")	
-
-[【UI素材】二维码解码器](http://www.fly63.com/php/decoder/"【UI素材】二维码解码器")	
-
-[【UI素材】LOGO设计](http://www.uugai.com/"【UI素材】LOGO设计")	
-
-[【UI素材】艺术字生成](https://www.qt86.com/"【UI素材】艺术字生成")	
-
-[【开发】正则表达式可视化](https://jex.im/regulex/#!flags=&re=%5E(a%7Cb)*%3F%24"【开发】正则表达式可视化")	
-
-[【开发】BASE64加密](https://base64.supfree.net/"【开发】BASE64加密")	
-
-[【开发】MD5加密](https://www.zxgj.cn/g/md5"【开发】MD5加密")	
+- [【画图】](https://www.processon.com/"【画图】")	
+- [【UI素材】阿里巴巴矢量图标库](https://www.iconfont.cn/"【UI素材】阿里巴巴矢量图标库")	
+- [【UI素材】开源PNG图片库](https://pluspng.com/"【UI素材】开源PNG图片库")	
+- [【UI素材】Emoji表情](https://emoji.svend.cc/"【UI素材】Emoji表情")	
+- [【UI素材】二维码美化](https://mh.cli.im/"【UI素材】二维码美化")
+- [【UI素材】在线PS](https://www.uupoop.com/#/old"【UI素材】在线PS")
+- [【UI素材】图片智能放大工具](https://bigjpg.com/"【UI素材】图片智能放大工具")	 
+- [【UI素材】二维码生成器](http://www.fly63.com/tool/ewm/"【UI素材】二维码生成器")	
+- [【UI素材】二维码解码器](http://www.fly63.com/php/decoder/"【UI素材】二维码解码器")	
+- [【UI素材】LOGO设计](http://www.uugai.com/"【UI素材】LOGO设计")	
+- [【UI素材】艺术字生成](https://www.qt86.com/"【UI素材】艺术字生成")	
+- [【开发】正则表达式可视化](https://jex.im/regulex/#!flags=&re=%5E(a%7Cb)*%3F%24"【开发】正则表达式可视化")	
+- [【开发】BASE64加密](https://base64.supfree.net/"【开发】BASE64加密")	
+- [【开发】MD5加密](https://www.zxgj.cn/g/md5"【开发】MD5加密")	
 
 
 # ===================================
@@ -516,10 +503,234 @@ public class Main2Activity extends AppCompatActivity {
 在上一步手机登录后按button后，如果屏幕浮现出“控制插座权限获取成功”，则成功；如果屏幕浮现"控制插座权限获取失败"，根据错误代码通过查表，继续调试！
 
 
+# ===================================
+# 2021.05.20：控制插座开关、温湿度显示、门磁状态显示
+
+## 1.实现“控制插座开关”的功能
+
+### 1.1 查看文件：ABSDK接口
+
+|6 | 控制插座（请在登录后使用）|
+| ---| ---|
+| 名称 |ABRet **sockCtrl**(String soDevName, String status) |
+|参数 |  **soDevName**: 插座名称、**status**:插座状态(0：关闭 1：打开) |
+|返回值 |  ABRet:  code String 处理结果(00000成功，00000以外失败)、msg|
+
+### 1.2 根据接口文件编写程序
+1. 获取插座的控制权限(已经完成)
+1. 获取插座当前的“开-关”状态
+1. 新创建一个类ConrolSocketStatusTask，继承AsyncTask
+1. 重写doInBackground()、onPostExecute()方法
+1. 将得到的状态对立的状态，传入sockCtrl()方法
+1. 实例化新建的ConrolSocketStatusTask类
+1. 执行！！！
+
+```java
+public class SocketActivity extends AppCompatActivity {
+    private TextView textViewSocket_St;    // 显示插座当前状态
+    private String SocketStatus;           // 插座当前状态
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_socket);
+        findView();
+    }
+
+    private void findView() {
+        textViewSocket_St = (TextView) findViewById(R.id.textViewSocket_St);
+    }
+
+    public void onClickSocket(View view) {
+        SocketStatusTask socketStatusTask = new SocketStatusTask();
+        socketStatusTask.execute();
+    }
+
+    // 1.获取插座的控制权限(已经完成)
+    class SocketStatusTask extends AsyncTask<Void, Void, ABRet> {
+
+        @Override
+        protected ABRet doInBackground(Void... Voids) {
+            ABRet abRet = ABSDK.getInstance().getSockStatus("s1");
+            return abRet;
+        }
+
+        @Override
+        protected void onPostExecute(ABRet abRet) {
+            super.onPostExecute(abRet);
+			
+            if (abRet.getCode().equals("00000")) {
+                Toast.makeText(SocketActivity.this, "插座权限获取成功", Toast.LENGTH_SHORT).show();
+		// 2.获取插座当前的“开-关”状态
+                SocketStatus = abRet.getDicDatas().get("status").toString();
+                textViewSocket_St.setText(SocketStatus);
+                // 6.实例化
+                ConrolSocketStatusTask conrolSocketStatusTask = new ConrolSocketStatusTask(SocketStatus);
+		// 7.执行！！！
+                conrolSocketStatusTask.execute();
+            } else {
+                Toast.makeText(SocketActivity.this, "插座权限获取失败" + abRet.getCode(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+	
+    // 3.新创建一个类ConrolSocketStatusTask，继承AsyncTask
+    class ConrolSocketStatusTask extends AsyncTask<String, Void, ABRet> {
+        private String SocketStatus1;
+
+        public ConrolSocketStatusTask(String SocketStatus) {
+            SocketStatus1 = SocketStatus;
+        }
+
+	// 4.重写doInBackground()、onPostExecute()方法
+        @Override
+        protected ABRet doInBackground(String... Voids) {
+	    // 5.将得到的状态对立的状态，传入sockCtrl()方法
+            if (SocketStatus1.equals("0")) {
+                SocketStatus1 = "1";
+            } else {
+                SocketStatus1 = "0";
+            }
+            ABRet abRet = ABSDK.getInstance().sockCtrl("s1", SocketStatus1);
+            return abRet;
+        }
+
+        @Override
+        protected void onPostExecute(ABRet abRet) {
+            super.onPostExecute(abRet);
+
+            if (abRet.getCode().equals("00000")) {
+                Toast.makeText(SocketActivity.this, "插座状态“更改”为：" + SocketStatus1, Toast.LENGTH_SHORT).show();
+                textViewSocket_St.setText(SocketStatus1);
+            } else {
+                Toast.makeText(SocketActivity.this, "插座状态“更改”失败！！！！" + abRet.getCode(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+```
+
+## 1.3 可能出现的“逻辑”问题：20000请求超时
+出现这个问题的原因很大的可能性，是因为你将后台程序写在了前端(例：将本应该在doInBackground()中的程序错写在onPostExecute()中)，使前端程序已经开始运行显示了，后台数据还没刷新完，导致请求超时！
+
+####  【ps】由于下面两个功能与之前一样，就不再详细说明了。
+
+## 2.实现“温湿度显示”的功能
+
+### 2.1 查看文件：ABSDK接口
+
+| 14  | 取得温湿度情报（请在登录后使用）|
+| ---| ---|
+| 名称 | ABRet getThStatus(String thDevName) |
+|参数 |  thDevName: 温湿度名称 |
+|返回值 |  ABRet:  code String、dicdatas Map："temperature" String -温度, "humidity" String -湿度|
 
 
+### 2.2 根据接口文件编写程序
+```java
+public class TempAndHumidityActivity extends AppCompatActivity {
+    private TextView textViewTemp;
+    private TextView textViewHumidity;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_temp_and_humidity);
+
+        findView();
+        THStatusTask thStatusTask = new THStatusTask();
+        thStatusTask.execute();
+    }
+
+    private void findView(){
+        textViewTemp = (TextView) findViewById(R.id.textViewTemp);
+        textViewHumidity = (TextView) findViewById(R.id.textViewHumidity);
+    }
+
+    class THStatusTask extends AsyncTask<Void, Void, ABRet> {
+        @Override
+        protected ABRet doInBackground(Void... Voids) {
+            ABRet abRet = ABSDK.getInstance().getThStatus("TH1");
+            return abRet;
+        }
+
+        @Override
+        protected void onPostExecute(ABRet abRet) {
+            super.onPostExecute(abRet);
+
+            if (abRet.getCode().equals("00000")){
+                Toast.makeText(TempAndHumidityActivity.this,"温湿度获取成功",Toast.LENGTH_SHORT).show();
+                String temp = abRet.getDicDatas().get("temperature").toString();
+                String humidity = abRet.getDicDatas().get("humidity").toString();
+                textViewTemp.setText(temp);
+                textViewHumidity.setText(humidity);
+
+            }else{
+                Toast.makeText(TempAndHumidityActivity.this,"温湿度获取失败"+abRet.getCode(),Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+
+```
+
+## 3.实现“门磁状态显示”的功能
+
+### 3.1 查看文件：ABSDK接口
+
+| 13 | 取得门磁状态（请在登录后使用）|
+| ---| ---|
+| 名称 | ABRet getDoorStatus(String doorDevName) |
+|参数 |  doorDevName: 门磁名称 |
+|返回值 |  ABRet:  code String、dicdatas Map：status String 门磁状态(0:关闭 1:开启)|
+
+### 3.2 根据接口文件编写程序
+```java
+public class DoorActivity extends AppCompatActivity {
+    private TextView textViewDoor;  
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_door);
+        findView();
+    }
+
+    private void findView() {
+        textViewDoor = (TextView) findViewById(R.id.textViewDoor);
+        DoorStatusTask doorStatusTask = new DoorStatusTask();
+        doorStatusTask.execute();
+    }
+
+    class DoorStatusTask extends AsyncTask<Void, Void, ABRet> {
+        @Override
+        protected ABRet doInBackground(Void... Voids) {
+            ABRet abRet = ABSDK.getInstance().getDoorStatus("door");
+            return abRet;
+        }
+
+        @Override
+        protected void onPostExecute(ABRet abRet) {
+            super.onPostExecute(abRet);
+            if (abRet.getCode().equals("00000")){
+                String door_status = abRet.getDicDatas().get("status").toString();
+                textViewDoor.setText(door_status);
+                Toast.makeText(DoorActivity.this,"门禁状态获取成功", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(DoorActivity.this,"门禁状态获取失败" + abRet.getCode(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+
+```
 
 # ===================================
+
+
+
 
 
 
