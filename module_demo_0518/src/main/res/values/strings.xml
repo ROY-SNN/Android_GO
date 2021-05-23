@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Module_demo_0518</string>
+    <string name="user_name">用户名</string>
+    <string name="passage">密码</string>
+
+
+    <string name="weight">请输入体重(公斤)</string>
+    <string name="height">请输入身高(cm)</string>
+
+
+</resources>
