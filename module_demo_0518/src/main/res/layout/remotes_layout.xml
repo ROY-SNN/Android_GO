@@ -4,22 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/imageViewButton01"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/imageViewRemoteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:srcCompat="@drawable/remote_button1a_b" />
 
         <TextView
-            android:id="@+id/textViewButton01"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/textViewKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="TextView" />
     </FrameLayout>

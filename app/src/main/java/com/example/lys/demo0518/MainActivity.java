@@ -28,27 +28,27 @@ public class MainActivity extends AppCompatActivity {
 
         // 【方法二】：利用sql语句与execSQL()方法
         String sql;
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 15; i++){
             sql = "insert into HWdata(Key,Value) values (" + "'" +  String.valueOf(i) + "'" +  ",'红外代码指令" + String.valueOf(i) + "')";
             db.execSQL(sql);
         }
         Log.v("数据库日志：", "数据插入成功！");
 
         // ======================3.查找数据(2种：但是query()方法有问题！！！)======================
-//        Cursor cursor = db.rawQuery("select * from HWdata", null);
-//        while (cursor.moveToNext()) {
-//            String key = cursor.getString(0); //获取第一列的值,第一列的索引从0开始
-//            String value = cursor.getString(1); //获取第一列的值,第一列的索引从0开始
-//            Log.v("数据库日志：", key + " " + value);
-//        }
+        Cursor cursor = db.rawQuery("select * from HWdata", null);
+        while (cursor.moveToNext()) {
+            String key = cursor.getString(0); //获取第一列的值,第一列的索引从0开始
+            String value = cursor.getString(1); //获取第一列的值,第一列的索引从0开始
+            Log.v("数据库日志：", key + " " + value);
+        }
         // =======================
-//        //String input_key = "34";
-//        //Cursor cursor = db.rawQuery("select * from HWdata where Key='" + input_key + "'",null);
-//        Cursor cursor = db.rawQuery("select * from HWdata where Key='34'",null);
-//        if(cursor.moveToFirst()) {
-//            String value = cursor.getString(cursor.getColumnIndex("Value"));
-//            Log.v("数据库日志：", " Key为34对应的value为 " + value);
-//        }
+        String input_key = "12";
+        cursor = db.rawQuery("select * from HWdata where Key='" + input_key + "'",null);
+        //Cursor cursor = db.rawQuery("select * from HWdata where Key='34'",null);
+        if(cursor.moveToFirst()) {
+            String value = cursor.getString(cursor.getColumnIndex("Value"));
+            Log.v("数据库日志：", " Key为12对应的value为 " + value);
+        }
 
 
 
@@ -89,6 +89,4 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        Log.v("数据库日志：", "数据查询结束！！！");
     }
-
-
 }

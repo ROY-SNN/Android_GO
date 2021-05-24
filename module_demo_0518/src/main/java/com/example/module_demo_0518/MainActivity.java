@@ -91,8 +91,10 @@ public class MainActivity extends AppCompatActivity {
                             .putString(AboxCons.SP_USER_PSD, editTextUserPwd.getText().toString())
                             .commit();
                 }
-                Intent intent = new Intent(MainActivity.this, SelectiveSensorActivity.class);
-                intent.putExtra("userName", editTextUserName.getText().toString());
+                Intent intent = new Intent(MainActivity.this, ListDemoActivity.class);
+                //Intent intent = new Intent(MainActivity.this, Remote_Activity.class);
+                //Intent intent = new Intent(MainActivity.this, SelectiveSensorActivity.class);
+                //intent.putExtra("userName", editTextUserName.getText().toString());
                 startActivity(intent);
             }else{
                 if(abRet.getCode().equals("20004")){

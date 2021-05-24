@@ -13,19 +13,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+
+        </activity>
+        <activity android:name=".ThActivity" />
+        <activity android:name=".DoorActivity" />
+        <activity android:name=".SelectiveSensorActivity" />
+        <activity android:name=".TempAndHumidityActivity" />
+        <activity android:name=".SocketActivity" />
+        <activity android:name=".InfraredActivity" />
+        <activity android:name=".ListDemoActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main2Activity" />
-        <activity android:name=".ThActivity" />
-        <activity android:name=".DoorActivity" />
-        <activity android:name=".SelectiveSensorActivity" />
-        <activity android:name=".TempAndHumidityActivity" />
-        <activity android:name=".SocketActivity" />
-        <activity android:name=".InfraredActivity"></activity>
+        <activity android:name=".Remote_Activity" />
     </application>
 
 </manifest>

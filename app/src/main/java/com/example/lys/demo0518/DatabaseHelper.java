@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
-        private static final String DB_NAME = "mydata04141.db"; //数据库名称
+        private static final String DB_NAME = "mydata4.db"; //数据库名称
         private static final int version = 1; //数据库版本
 
         public DatabaseHelper(Context context) {
