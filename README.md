@@ -2,11 +2,11 @@
 
 # Android_GO
 
-#### 生产实习2021.05.17~2021.05.20的内容(持续更新ing)
+#### 生产实习2021.05.17~2021.05.24的内容(持续更新ing)
 
 ## 常用的网站资源：
 
-- [【画图】](https://www.processon.com/"【画图】")	
+- [【画图】](https://www.processon.com/"【画图】")    
 - [【UI素材】阿里巴巴矢量图标库](https://www.iconfont.cn/"【UI素材】阿里巴巴矢量图标库")	
 - [【UI素材】开源PNG图片库](https://pluspng.com/"【UI素材】开源PNG图片库")	
 - [【UI素材】Emoji表情](https://emoji.svend.cc/"【UI素材】Emoji表情")	
@@ -728,6 +728,476 @@ public class DoorActivity extends AppCompatActivity {
 ```
 
 # ===================================
+# 2021.05.21：传感器学习红外遥控发射信息
+
+## 1 实现“学习红外遥控”替代遥控器
+### 1.1 查看文件：ABSDK接口
+
+| 18  | 红外学习（请在登录后使用）|
+| ---| ---|
+| 名称 | ABRet studyIrByIrDevName(String irDevName, String irKey) |
+|参数 |  irDevName: 红外设备名称、irKey：按键KEY |
+|返回值 |  ABRet:  code String 处理结果、msg String  错误信息|
+
+
+| 3 | 发送红外按键指令（请在登录后使用）|
+| ---| ---|
+| 名称 | ABRet sendIr(String irDevName, String irKey) |
+|参数 |  irDevName: 红外设备名称、irKey:按键KEY |
+|返回值 |  ABRet:  code String 处理结果、msg String  错误信息|
+
+
+### 1.2 根据接口文件编写程序
+
+
+
+```java
+package com.example.module_demo_0518;
+
+import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+import com.dhc.absdk.ABRet;
+import com.dhc.absdk.ABSDK;
+
+public class InfraredActivity extends AppCompatActivity {
+    private EditText editTextEnterKey;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_infrared);
+
+        editTextEnterKey = (EditText) findViewById(R.id.editTextEnterKey);
+    }
+
+    public void onClickLearn(View view){
+        InfraredLearnTask infraredLearnTask = new InfraredLearnTask(editTextEnterKey.getText().toString());
+        infraredLearnTask.execute();
+    }
+
+    public void onClickTest(View view){
+        InfraredTestTask infraredTestTask = new InfraredTestTask(editTextEnterKey.getText().toString());
+        infraredTestTask.execute();
+    }
+
+    class InfraredLearnTask extends AsyncTask<String, Void, ABRet> {
+        private String str_Key;
+
+        public InfraredLearnTask(String str_Key){
+            this.str_Key = str_Key;
+        }
+
+        @Override
+        protected ABRet doInBackground(String... Voids) {
+            ABRet abRet = ABSDK.getInstance().studyIrByIrDevName(AboxCons.INFRARED_DEVICE, str_Key);
+            return abRet;
+        }
+
+        @Override
+        protected void onPostExecute(ABRet abRet) {
+            super.onPostExecute(abRet);
+
+            if (abRet.getCode().equals("00000")) {
+                Toast.makeText(InfraredActivity.this,"红外学习成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(InfraredActivity.this,"红外学习失败" + AboxCons.errorMap.get(abRet.getCode()), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    class InfraredTestTask extends AsyncTask<String, Void, ABRet> {
+        private String str_Key;
+
+        public InfraredTestTask(String str_Key){
+            this.str_Key = str_Key;
+        }
+
+        @Override
+        protected ABRet doInBackground(String... Voids) {
+            ABRet abRet = ABSDK.getInstance().sendIr(AboxCons.INFRARED_DEVICE, str_Key);
+            return abRet;
+        }
+
+        @Override
+        protected void onPostExecute(ABRet abRet) {
+            super.onPostExecute(abRet);
+
+            if (abRet.getCode().equals("00000")) {
+                Toast.makeText(InfraredActivity.this,"红外发射成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(InfraredActivity.this,"红外发射失败" + AboxCons.errorMap.get(abRet.getCode()) , Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+
+```
+
+# ===================================
+# 2021.05.24：高级UI设计：适配器Adpater
+## 1 设备列表页面的设计(利用：控件ListView)
+### 1.1 适配器模式及Android适配器的简介
+**适配器模式**（Adapter）的定义如下：将一个类的接口转换成客户希望的另外一个接口，使得原本由于接口不兼容而不能一起工作的那些类能一起工作。适配器模式分为**类结构型模式**和**对象结构型模式**两种，前者类之间的耦合度比后者高，且要求程序员了解现有组件库中的相关组件的内部结构，所以应用相对较少些。	
+
+优点：
+1. 客户端通过适配器可以透明地调用目标接口。
+1. 复用了现存的类，开发人员不需要修改原有代码而重用现有的适配者类。
+1. 将目标类和适配者类解耦，解决了目标类和适配者类接口不一致的问题。
+1. 在很多业务场景中符合开闭原则。
+
+Android中的适配器是数据和视图之间的一个桥梁，通过适配器以便于数据在view视图上显示。我们知道数据源是各种各样的，而控件所展示数据的格式则是有一定的要求的。数据适配器正是建立了数据源与控件之间的适配关系，将数据源转换为控件能够显示的数据格式，从而将数据的来源与数据的显示进行解耦，降低程序的耦合性，这也体现了Android的适配器模式的使用。例如：ArrayAdapter、SimpleAdapter、BaseAdapter等等。
+
+
+
+
+### 1.2 控件ListView的显示与缓存机制
+ListView、GridView等控件可以展示大量的数据信息，但是屏幕的尺寸是有限的，一屏幕只能显示下图中的7条。当向上滑动ListView的时候，item1被滑出了屏幕区域，那么系统就会将item1回收到Recycler中，即View缓冲池中，而将要显示的item8则会从缓存池中取出布局文件，并重新设置好item8需要显示的数据，并放入需要显示的位置。这就是ListView的缓冲机制，总结起来就是一句话：**需要时才显示，显示完就被会收到缓存**。ListView，GridView等数据显示控件通过这种缓存机制可以极大的节省系统资源，具体内容请看下面两篇博客内容。
+
+[【ListView显示与缓存机制1】](https://www.cnblogs.com/jasonxcj/p/5048989.html"ListView显示与缓存机制1")
+[【ListView显示与缓存机制2】](https://www.cnblogs.com/caobotao/p/5061627.html"ListView显示与缓存机制2")
+
+
+
+### 1.3 利用Arraydapter(数组适配器)和ListView(控件)实现“设备列表”
+ListView允许用户通过上下滑动来将屏幕外的数据滚动到屏幕内，同时屏幕内原有的数据滚动出屏幕，从而显示更多的数据内容。数组中的数据无法直接传递给ListView,这时需要借助适配器(Adapter)来完成。Android中提供了很多适配器,这里使用的是ArrayAdapter,它可以通过泛型来指定要适配的数据类型，然后在构造函数中把要适配的数据传入。
+
+【方法一】：继承Activity类
+1. 在布局文件中创建ListView控件（注意：id值可以自己设置）
+1. 创建一个继承Activity的类
+1. 数据源的准备
+1. 初始化适配器
+1. 绑定适配器
+1. 为ListView添加监听器
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.module_demo_0518.ListDemoActivity">
+
+    <!--【方法一】：继承Activity，其中ListView控件的id值可以自己设置-->
+	<!--1.在布局文件中创建ListView控件-->
+    <ListView
+        android:id="@+id/ListViewDevice"
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
+</android.support.constraint.ConstraintLayout>
+
+```
+
+
+```java
+package com.example.module_demo_0518;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+// 2.继承Activity类
+public class ListDemoActivity extends Activity {
+    ArrayList<String> arrayListDevices;   // 【数据源】：利用列表存放设备名称
+    ListView listViewDevice;     		 //  控件ListView
+    ArrayAdapter<String> arrayAdpater;    // 创建ArrayAdapter适配器
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_list_demo);
+		
+		// 3.数据源的准备
+        getData();
+		// 4.初始化适配器
+		//  参数1：Adapter对应的上下文、参数2：对应的布局文件的Id、参数3：适配的数据
+        arrayAdpater = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayListDevices);
+        listViewDevice = (ListView) findViewById(R.id.ListViewDevice);
+		// 5.绑定适配器
+        listViewDevice.setAdapter(arrayAdpater);
+        // 6.为ListView设置监听器
+        listViewDevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(ListDemoActivity.this,"选择：" + arrayListDevices.get(position), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+	
+    private void getData() {
+        arrayListDevices = new ArrayList<String>();
+        arrayListDevices.add(AboxCons.INFRARED_DEVICE);
+        arrayListDevices.add(AboxCons.SOCKET_DEVICE);
+    }
+}
+
+```
+
+【方法二】：继承ListActivity类
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.module_demo_0518.ListDemoActivity">
+
+    <!--【方法二】：继承ListActivity：android:id="@android:id/list"-->
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
+</android.support.constraint.ConstraintLayout>
+```
+
+```java
+package com.example.module_demo_0518;
+
+import android.app.Activity;
+import android.app.ListActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+public class ListDemoActivity extends ListActivity {
+    ArrayList<String> arrayListDevices;  
+    ArrayAdapter<String> arrayAdpater;     
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_list_demo);
+
+        getData();
+        arrayAdpater = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayListDevices);
+		// 直接绑定适配器
+        gitListView().setAdapter(arrayAdpater);
+
+        // 为ListView设置监听器
+        gitListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(ListDemoActivity.this,"选择：" + arrayListDevices.get(position), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getData() {
+        arrayListDevices = new ArrayList<String>();
+        arrayListDevices.add(AboxCons.INFRARED_DEVICE);
+        arrayListDevices.add(AboxCons.SOCKET_DEVICE);
+    }
+}
+
+```
+【ps】：2个写的不错的博客内容
+[【控件ListView的用法】](https://www.jianshu.com/p/f217b0208462"ListView的简单用法")
+[【适配器ArrayAdapter的用法】](https://www.cnblogs.com/wenjiang/p/3196205.html"适配器ArrayAdapter的用法")
+
+
+
+## 2 遥控按键页面的设计(利用：控件GridView)
+### 2.1 控件GridView介绍
+GridView控件一表格形式显示数据源中的数据，提供对列进行排序、分页以及编辑、删除单个记录的功能。
+
+
+
+### 2.2 BaseAdapter适配器的介绍
+
+使用BaseAdapter类的时候，主要是通过继承此类来实现BaseAdapter的四个方法：
+- public int getCount(): 适配器中数据集的数据个数；
+- public Object getItem(int position): 获取数据集中与索引对应的数据项；
+- public long getItemId(int position): 获取指定行对应的ID；
+- public View getView(int position,View convertView,ViewGroup parent): 获取每一行Item的显示内容。
+
+
+### 2.3 利用BaseAdapter(适配器)和GridView(控件)实现“遥控按键列表”
+1. 2个布局文件：(1)GridView控件(2)每个网格中存放的按键和文本显示(利用：FrameLayout)
+1. 创建一个继承BaseAdapter的类(需要重写4个方法)
+1. 数据源的准备
+1. 初始化适配器
+1. 绑定适配器
+1. 为GridView添加监听器
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.module_demo_0518.Remote_Activity">
+
+	<!--1.一个布局文件中放置GridView控件-->
+    <GridView
+        android:id="@+id/gridViewRemotes"
+        android:numColumns="3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</android.support.constraint.ConstraintLayout>
+```
+
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+	<!--1.一个布局文件中放置每个网格中放置的按键和文本框信息(利用：FrameLayout)-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageViewRemoteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/remote_button1a_b" />
+
+        <TextView
+            android:id="@+id/textViewKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="TextView" />
+    </FrameLayout>
+</LinearLayout>
+```
+
+```java
+package com.example.module_demo_0518;
+
+import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+public class Remote_Activity extends AppCompatActivity {
+    ArrayList<String> arrayListRemoteButtons;    // 【数据源】：利用列表存放遥控器按键名称
+    private GridView gridViewRemotes;            // GridView
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_remote);
+
+        // 3.数据源的准备
+        getData();
+        // 4.初始化配置器
+        GridViewRemoteAdapter gridViewRemoteAdapter = new GridViewRemoteAdapter(this);
+        gridViewRemotes = (GridView) findViewById(R.id.gridViewRemotes);
+        // 5.绑定配置器
+        gridViewRemotes.setAdapter(gridViewRemoteAdapter);
+        // 6.为GridView设置监听器
+        gridViewRemotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(Remote_Activity.this,"选择：" + arrayListRemoteButtons.get(position), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getData(){
+        arrayListRemoteButtons = new ArrayList<String>();
+        for (int i = 0; i < 30; i++){
+            arrayListRemoteButtons.add("key" + i);
+        }
+    }
+
+    // 2.创建一个新的类继承BaseAdapter(重写4个方法)
+    class GridViewRemoteAdapter extends BaseAdapter{
+        Context context;
+        LayoutInflater layoutInflater;
+
+        public GridViewRemoteAdapter(Context context) {
+            this.context = context;
+            this.layoutInflater = LayoutInflater.from(context);
+        }
+
+        // 适配器中对应数据的个数
+        @Override
+        public int getCount() {
+            return 30;
+        }
+
+        // 获取数据集中与索引对应的数据项
+        @Override
+        public Object getItem(int position) {
+            return position;
+        }
+
+        // 获取指定行对应的ID
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        // 获取每一行Item的显示内容
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null){
+                convertView = layoutInflater.inflate(R.layout.remotes_layout, null);
+            }
+            TextView textViewKey;
+            textViewKey = (TextView) convertView.findViewById(R.id.textViewKey);
+            textViewKey.setText(arrayListRemoteButtons.get(position));
+            return convertView;
+        }
+    }
+}
+
+```
+
+【ps】参考博客：
+[【适配器BaseAdapter1】](https://www.jianshu.com/p/24833a2cffd1"适配器BaseAdapter1")
+[【适配器BaseAdapter2】](https://www.cnblogs.com/caobotao/p/5061627.html"适配器BaseAdapter2")
+
+
+
+
+
+
+
+
+
+
 
 
 
