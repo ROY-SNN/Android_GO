@@ -913,7 +913,7 @@ import java.util.ArrayList;
 // 2.继承Activity类
 public class ListDemoActivity extends Activity {
     ArrayList<String> arrayListDevices;   // 【数据源】：利用列表存放设备名称
-    ListView listViewDevice;     		 //  控件ListView
+    ListView listViewDevice;     	  //  控件ListView
     ArrayAdapter<String> arrayAdpater;    // 创建ArrayAdapter适配器
 
     @Override
@@ -921,13 +921,13 @@ public class ListDemoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_demo);
 		
-		// 3.数据源的准备
+	// 3.数据源的准备
         getData();
-		// 4.初始化适配器
-		//  参数1：Adapter对应的上下文、参数2：对应的布局文件的Id、参数3：适配的数据
+	// 4.初始化适配器
+	//  参数1：Adapter对应的上下文、参数2：对应的布局文件的Id、参数3：适配的数据
         arrayAdpater = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayListDevices);
         listViewDevice = (ListView) findViewById(R.id.ListViewDevice);
-		// 5.绑定适配器
+	// 5.绑定适配器
         listViewDevice.setAdapter(arrayAdpater);
         // 6.为ListView设置监听器
         listViewDevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -995,7 +995,7 @@ public class ListDemoActivity extends ListActivity {
 
         getData();
         arrayAdpater = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayListDevices);
-		// 直接绑定适配器
+	// 直接绑定适配器
         gitListView().setAdapter(arrayAdpater);
 
         // 为ListView设置监听器
@@ -1053,7 +1053,7 @@ GridView控件一表格形式显示数据源中的数据，提供对列进行排
     android:layout_height="match_parent"
     tools:context="com.example.module_demo_0518.Remote_Activity">
 
-	<!--1.一个布局文件中放置GridView控件-->
+    <!--1.一个布局文件中放置GridView控件-->
     <GridView
         android:id="@+id/gridViewRemotes"
         android:numColumns="3"
@@ -1070,7 +1070,7 @@ GridView控件一表格形式显示数据源中的数据，提供对列进行排
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-	<!--1.一个布局文件中放置每个网格中放置的按键和文本框信息(利用：FrameLayout)-->
+    <!--1.一个布局文件中放置每个网格中放置的按键和文本框信息(利用：FrameLayout)-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
