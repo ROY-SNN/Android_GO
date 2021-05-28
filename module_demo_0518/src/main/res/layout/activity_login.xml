@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.example.module_demo_0518.LoginActivity">
+
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="383dp"
+        android:layout_height="350dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/yayaya"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="350dp"
+        android:layout_height="230dp"
+        android:layout_marginBottom="268dp"
+        android:background="@drawable/shape_login_from"
+        android:paddingLeft="34dp"
+        android:paddingRight="23dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.766"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingLeft="25dp"
+            android:paddingRight="10dp"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="30dp"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="0.16"
+                    android:src="@drawable/people" />
+                <EditText
+                    android:id="@+id/editTextUserName"
+                    android:layout_width="187dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="0.37"
+                    android:background="@null"
+                    android:hint="用户名"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="23dp"
+                android:layout_marginBottom="23dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#e8e7e7"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="0.16"
+                    android:src="@drawable/unlock" />
+                <EditText
+                    android:id="@+id/editTextUserPwd"
+                    android:layout_width="187dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="0.37"
+                    android:background="@null"
+                    android:hint="密    码"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="257dp"
+                android:layout_height="71dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="1">
+
+                <CheckBox
+                    android:id="@+id/checkBox"
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:text="自动登录"
+                    android:layout_weight="0.57" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxRemmberMe"
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:text="记住密码" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:text="登      录"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:textSize="24sp"
+        android:textColor="#ffffff"
+        android:onClick="onloginButtononCliked"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/colorss"
+        android:layout_marginBottom="133dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="DESIGNED BY LI XIONG JIA YANG" />
+</RelativeLayout>

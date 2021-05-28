@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/one_" android:duration="120"/>
+    <item android:drawable="@drawable/two_" android:duration="120"/>
+    <item android:drawable="@drawable/three_" android:duration="100"/>
+    <item android:drawable="@drawable/four_" android:duration="80"/>
+    <item android:drawable="@drawable/five_" android:duration="80"/>
+    <item android:drawable="@drawable/six_" android:duration="80"/>
+    <item android:drawable="@drawable/seven_" android:duration="80"/>
+    <item android:drawable="@drawable/eight_" android:duration="80"/>
+    <item android:drawable="@drawable/nine_" android:duration="80"/>
+    <item android:drawable="@drawable/ten_" android:duration="80"/>
+    <item android:drawable="@drawable/eve_" android:duration="120"/>
+    <item android:drawable="@drawable/twe_" android:duration="120"/>
+    <item android:drawable="@drawable/thi_" android:duration="120"/>
+    <item android:drawable="@drawable/xiong" android:duration="330"/>
+    <item android:drawable="@drawable/jia" android:duration="330"/>
+    <item android:drawable="@drawable/cao" android:duration="330"/>
+    <item android:drawable="@drawable/yang" android:duration="330"/>
+    <item android:drawable="@drawable/dong" android:duration="330"/>
+    <item android:drawable="@drawable/li" android:duration="330"/>
+    <item android:drawable="@drawable/lili" android:duration="330"/>
+    <item android:drawable="@drawable/li" android:duration="330"/>
+    <item android:drawable="@drawable/lili" android:duration="330"/>
+    <item android:drawable="@drawable/li" android:duration="330"/>
+    <item android:drawable="@drawable/lili" android:duration="330"/>
+    <item android:drawable="@drawable/li" android:duration="330"/>
+    <item android:drawable="@drawable/lili" android:duration="330"/>
+    <item android:drawable="@drawable/li" android:duration="330"/>
+    <item android:drawable="@drawable/lili" android:duration="330"/>
+
+
+
+</animation-list>

@@ -3,8 +3,9 @@ package com.example.module_demo_0518;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,81 +13,70 @@ import com.dhc.absdk.ABRet;
 import com.dhc.absdk.ABSDK;
 
 public class SocketActivity extends AppCompatActivity {
-    private TextView textViewSocket_St;
-    private String SocketStatus;
+    private String stateSocket;       //插座状态
+    //    private String strStateSocket;
+    private TextView textViewSocketState;
+    private ImageView imageViewSocket;
+    int i=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_socket);
 
-        findView();
+        textViewSocketState = (TextView) findViewById(R.id.textViewStateInSocket);
+        imageViewSocket = (ImageView) findViewById(R.id.imageViewStateInSocket);
+
+        CatchSocketState catchSocketState = new CatchSocketState();
+        catchSocketState.execute();
     }
 
-    private void findView(){
-        textViewSocket_St = (TextView) findViewById(R.id.textViewSocket_St);
+    public void buttonSocketSwitchOnClicked(View view){
+        CatchSocketState catchSocketState = new CatchSocketState();
+        catchSocketState.execute();
     }
 
-    public void onClickSocket(View view) {
-        SocketStatusTask socketStatusTask = new SocketStatusTask();
-        socketStatusTask.execute();
-    }
+    //*****************************************插座状态获取*****************************************//
 
-
-    class SocketStatusTask extends AsyncTask<Void, Void, ABRet> {
-
+    class CatchSocketState extends AsyncTask<Void,Void,ABRet> {
         @Override
-        protected ABRet doInBackground(Void... Voids) {
-            ABRet abRet = ABSDK.getInstance().getSockStatus("s1");
-            return abRet;
+        protected ABRet doInBackground(Void... Voids){
+            ABRet abret= ABSDK.getInstance().getSockStatus("s1");
+            stateSocket=abret.getDicDatas().get("status").toString();
+            return abret;
         }
-
         @Override
-        protected void onPostExecute(ABRet abRet) {
-            super.onPostExecute(abRet);
-
-            if (abRet.getCode().equals("00000")) {
-                Toast.makeText(SocketActivity.this, "插座权限获取成功", Toast.LENGTH_SHORT).show();
-                // 获取当前插座的状态，并打印
-                SocketStatus = abRet.getDicDatas().get("status").toString();
-                textViewSocket_St.setText(SocketStatus);
-                // 创建控制插座的实例对象，并将当前状态赋值给它
-                ConrolSocketStatusTask conrolSocketStatusTask = new ConrolSocketStatusTask(SocketStatus);
-                conrolSocketStatusTask.execute();
-            } else {
-                Toast.makeText(SocketActivity.this, "插座权限获取失败" + abRet.getCode(), Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(ABRet abret){
+            super.onPostExecute(abret);
+            if(abret.getCode().equals("00000")){
+                textViewSocketState.setText("插座已经" + (stateSocket.equals("1") ? "开启" : "关闭"));
+                imageViewSocket.setImageResource(stateSocket.equals("1") ? R.drawable.suozi  : R.drawable.suo);
+                SocketControl socketControl=new SocketControl();
+                socketControl.execute();
+            }else{
+                textViewSocketState.setText("控制插座权限获取失败");
             }
         }
     }
 
-    class ConrolSocketStatusTask extends AsyncTask<String, Void, ABRet> {
-        private String SocketStatus1;
+    //***************************************控制插座********************************************//
 
-        public ConrolSocketStatusTask(String SocketStatus) {
-            SocketStatus1 = SocketStatus;
-        }
+    class SocketControl extends AsyncTask<Void,Void,ABRet>{
 
         @Override
-        protected ABRet doInBackground(String... Voids) {
-            if (SocketStatus1.equals("0")) {
-                SocketStatus1 = "1";
-            } else {
-                SocketStatus1 = "0";
-            }
-            ABRet abRet = ABSDK.getInstance().sockCtrl("s1", SocketStatus1);
-            return abRet;
+        protected ABRet doInBackground(Void...Voids){
+            ABRet abret=ABSDK.getInstance().sockCtrl("s1",stateSocket.equals("1") ? "0" : "1");
+            return abret;
         }
-
         @Override
-        protected void onPostExecute(ABRet abRet) {
-            super.onPostExecute(abRet);
-
-            if (abRet.getCode().equals("00000")) {
-                Toast.makeText(SocketActivity.this, "插座状态“更改”为：" + SocketStatus1, Toast.LENGTH_SHORT).show();
-                textViewSocket_St.setText(SocketStatus1);
-            } else {
-                Toast.makeText(SocketActivity.this, "插座状态“更改”失败！！！！" + abRet.getCode(), Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(ABRet abret){
+            super.onPostExecute(abret);
+            if(abret.getCode().equals("00000")) {
+                Toast.makeText(SocketActivity.this, "控制开关成功", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(SocketActivity.this, "控制插座失败", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
 }

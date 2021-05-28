@@ -24,7 +24,7 @@ public class TempAndHumidityActivity extends AppCompatActivity {
 
     private void findView(){
         textViewTemp = (TextView) findViewById(R.id.textViewTemp);
-        textViewHumidity = (TextView) findViewById(R.id.textViewHumidity);
+        textViewHumidity = (TextView) findViewById(R.id.textViewHum);
     }
 
     class THStatusTask extends AsyncTask<Void, Void, ABRet> {
@@ -39,11 +39,18 @@ public class TempAndHumidityActivity extends AppCompatActivity {
         protected void onPostExecute(ABRet abRet) {
             super.onPostExecute(abRet);
 
+            double inum;
             if (abRet.getCode().equals("00000")){
                 Toast.makeText(TempAndHumidityActivity.this,"温湿度获取成功", Toast.LENGTH_SHORT).show();
                 String temp = abRet.getDicDatas().get("temperature").toString();
                 String humidity = abRet.getDicDatas().get("humidity").toString();
                 textViewTemp.setText(temp);
+                inum = Double.parseDouble(temp);
+                if(inum > 26.0){
+                    Toast.makeText(TempAndHumidityActivity.this,"哎呦~~不粗哦！",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(TempAndHumidityActivity.this,"哎呦~~不粗哦！",Toast.LENGTH_SHORT).show();
+                }
                 textViewHumidity.setText(humidity);
             }else{
                 Toast.makeText(TempAndHumidityActivity.this,"温湿度获取失败"+abRet.getCode(),Toast.LENGTH_SHORT).show();

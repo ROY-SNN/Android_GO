@@ -4,38 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.module_demo_0518.SocketActivity">
+    android:background="@color/beijin"
+    tools:context="com.example.administrator.apppp.SocketActivity">
 
     <Button
-        android:id="@+id/buttonSocket"
-        android:layout_width="181dp"
-        android:layout_height="62dp"
-        android:text="更改插座开关的状态"
-        android:background="@color/aquamarine"
-        android:onClick="onClickSocket"
+        android:id="@+id/buttonSwitchInSocket"
+        android:layout_width="179dp"
+        android:layout_height="42dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="176dp"
-        app:layout_constraintHorizontal_bias="0.454"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSocket_St"
-        app:layout_constraintVertical_bias="0.519" />
-
-    <TextView
-        android:id="@+id/textViewSocket_St"
-        android:layout_width="190dp"
-        android:layout_height="55dp"
-        android:text="0/1"
-        android:textSize="40sp"
-        android:gravity="center"
-        android:layout_marginLeft="8dp"
+        android:onClick="buttonSocketSwitchOnClicked"
+        android:background="@drawable/anniu_botton"
+        android:textColor="@android:color/background_light"
+        android:shape="rectangle"
+        android:text="开     关"
+        android:textSize="25dp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="101dp"
-        app:layout_constraintHorizontal_bias="0.477" />
+        android:layout_marginTop="445dp"
+        tools:layout_editor_absoluteY="453dp" />
+
+    <TextView
+        android:id="@+id/textViewStateInSocket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewStateInSocket" />
+
+    <ImageView
+        android:id="@+id/imageViewStateInSocket"
+        android:layout_width="286dp"
+        android:layout_height="238dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="42dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/suo"
+        app:layout_constraintHorizontal_bias="0.504" />
+
 </android.support.constraint.ConstraintLayout>

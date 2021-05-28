@@ -7,28 +7,28 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@mipmap/app_pat"
+        android:label="智能家具助手"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-
-        </activity>
-        <activity android:name=".ThActivity" />
-        <activity android:name=".DoorActivity" />
-        <activity android:name=".SelectiveSensorActivity" />
-        <activity android:name=".TempAndHumidityActivity" />
-        <activity android:name=".SocketActivity" />
-        <activity android:name=".InfraredActivity" />
-        <activity android:name=".ListDemoActivity" >
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Remote_Activity" />
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".DoorActivity" />
+        <activity android:name=".SelectiveSensorActivity" />
+        <activity android:name=".TempAndHumidityActivity" />
+        <activity android:name=".SocketActivity" />
+        <activity android:name=".ListDemoActivity" />
+        <activity android:name=".Remote_Activity"></activity>
+        <activity android:name=".Socket_many_Activity" />
+        <activity android:name=".ColoredEggsActivity"></activity>
+        <activity android:name="Snack.MainSnackActivity"></activity>
     </application>
 
 </manifest>

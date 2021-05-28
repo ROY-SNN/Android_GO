@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--手指未触摸时-->
+    <item android:state_pressed="false">
+        <shape android:shape="rectangle">
+            <!-- 填充的颜色 -->
+            <!--<solid android:color="@color/colorPrimary1" />-->
+            <gradient
+                android:startColor="@color/anniu"
+                android:endColor="@color/anniu"
+                android:angle="270" />
+
+            <!-- 设置按钮的四个角为弧形 -->
+            <!-- android:radius 弧形的半径 -->
+            <corners android:radius="8dp" />
+            <!-- padding：Button里面的文字与Button边界的间隔 -->
+            <!--<padding android:bottom="5dp" android:left="10dp" android:right="10dp" android:top="5dp" />-->
+        </shape>
+    </item>
+
+    <!--手指触摸时-->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/anniu" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+</selector>
