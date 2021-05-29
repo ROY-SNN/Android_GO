@@ -1,6 +1,8 @@
 package com.example.module_demo_0518;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,26 +26,51 @@ public class SelectiveSensorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = (ListView) findViewById(R.id.listview);
 
-        //适配器
+        listView = (ListView) findViewById(R.id.listview);
+        //=========================适配器初始化(情景模式)============================
         String[] data = new String[]{"家长模式","儿童模式","娱乐模式","其他模式"};
         ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(),R.layout.item_text,data);
         listView.setAdapter(arrayAdapter);
 
+        /**
+         * 【setOnItemClickListener()方法】：为适配器设置监听
+         */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
              @Override
              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 Toast.makeText(SelectiveSensorActivity.this, "你点击的item是第" + position + "个", Toast.LENGTH_SHORT).show();
-                 if(position == 2){
-                     Intent intent = new Intent(SelectiveSensorActivity.this, MainSnackActivity.class);
-                     startActivity(intent);
+                 switch(position){
+                     case 0 :
+                         new AlertDialog.Builder(SelectiveSensorActivity.this).setTitle("开发人员正在Coding！尽情期待")
+                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                     @Override
+                                     public void onClick(DialogInterface dialog, int which) {
+                                     }
+                                 }).show();
+                         break;
+                     case 1 :
+                         new AlertDialog.Builder(SelectiveSensorActivity.this).setTitle("开发人员正在Coding！尽情期待")
+                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                     @Override
+                                     public void onClick(DialogInterface dialog, int which) {
+                                     }
+                                 }).show();
+                         break;
+                     case 2 :
+                         Intent intent = new Intent(SelectiveSensorActivity.this, MainSnackActivity.class);
+                         startActivity(intent);
+                         break;
+                     case 3 :
+                         new AlertDialog.Builder(SelectiveSensorActivity.this).setTitle("开发人员正在Coding！尽情期待")
+                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                     @Override
+                                     public void onClick(DialogInterface dialog, int which) {
+                                     }
+                                 }).show();
+                         break;
                  }
              }
          });
-
-
-
         //textViewUserName = (TextView) findViewById(R.id.textViewUserName);
         //Intent intent = getIntent();
         //textViewUserName.setText(intent.getStringExtra("userName"));
@@ -89,4 +116,17 @@ public class SelectiveSensorActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * 【按键onClickbuttonSetting监听】：尽情期待！
+     */
+    public void onClickbuttonSetting(View view){
+        new AlertDialog.Builder(SelectiveSensorActivity.this)
+                .setTitle("开发人员正在Coding！尽情期待")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .show();
+    }
 }

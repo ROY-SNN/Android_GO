@@ -22,16 +22,22 @@ import android.widget.Toast;
 import com.dhc.absdk.ABRet;
 import com.dhc.absdk.ABSDK;
 
+
+/**
+ * 【多插座页面】：(利用Fragment)
+ */
 public class Socket_many_Activity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    private Fragment [] socketFragments;
+    private Fragment [] socketFragments;  // 利用数组存放Fragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_many_socket);
+
+        // 实例化Fragment(2个)
         socketFragments = new Fragment[]{new PlaceholderFragment(),new PlaceholderFragment2()};
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -58,7 +64,7 @@ public class Socket_many_Activity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //no inspection Simplifiable If Statement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -73,8 +79,8 @@ public class Socket_many_Activity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            //调用getItem实例化给定页面的片段。
-            //返回一个PlaceholderFragment(定义为下面的静态内部类)。
+            // 调用getItem实例化给定页面的片段。
+            // 返回一个PlaceholderFragment(定义为下面的静态内部类)。
             return socketFragments[position];
         }
 
@@ -98,7 +104,7 @@ public class Socket_many_Activity extends AppCompatActivity {
     // ==================================【第一个片段】===============================================
     public static class PlaceholderFragment extends Fragment {
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private View rootView;
+        //private View rootView;
         private Button buttonSocket;
         public PlaceholderFragment() {
         }
@@ -127,17 +133,18 @@ public class Socket_many_Activity extends AppCompatActivity {
                     }else{
                         status = "0";
                     }
-                    ConrolSocketStatusTask conrolSocketStatusTask = new ConrolSocketStatusTask("s1", rootView_final, status);
+                    ConrolSocketStatusTask conrolSocketStatusTask = new ConrolSocketStatusTask(AboxCons.SOCKET_DEVICE1, rootView_final, status);
                     conrolSocketStatusTask.execute();
                 }
             });
 
             // 插座实例化：获取权限、现在的状态
-            final SocketStatusTask socketStatusTask = new SocketStatusTask("s1", rootView);
+            final SocketStatusTask socketStatusTask = new SocketStatusTask(AboxCons.SOCKET_DEVICE1, rootView);
             socketStatusTask.execute();
 
             return rootView;
         }
+
         // ======插座获取权限,并获取当前状态！=======
         class SocketStatusTask extends AsyncTask<String, Void, ABRet> {
             private String devise;
@@ -163,7 +170,6 @@ public class Socket_many_Activity extends AppCompatActivity {
                 super.onPostExecute(abRet);
 
                 if (abRet.getCode().equals("00000")) {
-                    Toast.makeText(getContext(), "s1插座权限获取成功", Toast.LENGTH_SHORT).show();
                     if(abRet.getDicDatas().get("status").toString().equals("0")){
                         textView.setText("关");
                     }else{
@@ -221,19 +227,10 @@ public class Socket_many_Activity extends AppCompatActivity {
         }
     }
 
-
-
-
-
-
-
-
-
-
-    // ==================================【第一个片段】===============================================
+    // ==================================【第二个片段】===============================================
     public static class PlaceholderFragment2 extends Fragment {
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private View rootView;
+        //private View rootView;
         private Button buttonSocket;
         public PlaceholderFragment2() {
         }
@@ -262,17 +259,18 @@ public class Socket_many_Activity extends AppCompatActivity {
                     }else{
                         status = "0";
                     }
-                    ConrolSocketStatusTask conrolSocketStatusTask = new ConrolSocketStatusTask("s2", rootView_final, status);
+                    ConrolSocketStatusTask conrolSocketStatusTask = new ConrolSocketStatusTask(AboxCons.SOCKET_DEVICE2, rootView_final, status);
                     conrolSocketStatusTask.execute();
                 }
             });
 
             // 插座实例化：获取权限、现在的状态
-            final SocketStatusTask socketStatusTask = new SocketStatusTask("s2", rootView);
+            final SocketStatusTask socketStatusTask = new SocketStatusTask(AboxCons.SOCKET_DEVICE2, rootView);
             socketStatusTask.execute();
 
             return rootView;
         }
+
         // ======插座获取权限,并获取当前状态！=======
         class SocketStatusTask extends AsyncTask<String, Void, ABRet> {
             private String devise;
@@ -298,7 +296,7 @@ public class Socket_many_Activity extends AppCompatActivity {
                 super.onPostExecute(abRet);
 
                 if (abRet.getCode().equals("00000")) {
-                    Toast.makeText(getContext(), "s1插座权限获取成功", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "s1插座权限获取成功", Toast.LENGTH_SHORT).show();
                     if(abRet.getDicDatas().get("status").toString().equals("0")){
                         textView.setText("关");
                     }else{

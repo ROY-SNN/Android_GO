@@ -10,17 +10,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 /**
- * 【app打开前的载入页面】：
+ * 【app打开前的载入页面】：进度条等等
  */
 public class SplashActivity extends AppCompatActivity {
-    // ===================================
     private ProgressBar progressBar;
     private int mProgress=0;
     private Handler mHandler;
-    // ===================================
+
     Handler mHandler_former = new Handler();
 
     @Override
@@ -36,13 +34,11 @@ public class SplashActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         DisplayMetrics dm = getResources().getDisplayMetrics();
-        int displayWidth = dm.widthPixels;
-        int displayHeight = dm.heightPixels;
         ImageView imageView = (ImageView)findViewById( R.id.imageView);
         imageView.setLeft(0);
         imageView.setTop(0);
-        imageView.setRight( displayWidth );
-        imageView.setBottom( displayHeight );
+        imageView.setRight(dm.widthPixels);
+        imageView.setBottom(dm.heightPixels);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mHandler_former.postDelayed(new Runnable(){
             public void run(){
@@ -53,7 +49,6 @@ public class SplashActivity extends AppCompatActivity {
         },2000);
 
         progressBar =(ProgressBar)findViewById(R.id.progressBar);
-
         mHandler =new Handler(){
             @Override
             public void handleMessage(Message msg) {

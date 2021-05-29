@@ -26,49 +26,61 @@ import com.dhc.absdk.ABSDK;
 import java.util.ArrayList;
 
 /**
- * 【Remote_Activity类】：遥控器按键
+ * 【遥控器按键页面】：
+ *      功能：(1)红外遥控按键的学习、测试与命名
+ *            (2)红外遥控按键的发射
+ *            (3)红外遥控按键的删除
  */
 public class Remote_Activity extends AppCompatActivity {
-    ArrayList<String> arrayListRemoteButtons = new ArrayList<String>();   // 【数据】集合
+    ArrayList<String> arrayListRemoteButtons = new ArrayList<String>(); // 本地集合用来存放功能名(keyName)
+    private GridView gridViewRemotes;                              // 遥控按键的网格控件
+    private GridViewRemoteAdapter gridViewRemoteAdapter;           // 遥控按键的网格控件的适配器
     AboxSQLDatabase aboxSQLDatabase;
     AboxSQLOpenHelper aboxSQLOpenHelper;
-    SharedPreferences sp;                  // 用来生成是否为第一次使用遥控的文件！
-    private GridView gridViewRemotes;      // 遥控按键的网格控件
-    private GridViewRemoteAdapter gridViewRemoteAdapter;
+    SharedPreferences sp;                                          // 轻量级存储，用来判断是否为第一次使用遥控
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_remote);
 
-        // 【数据库实例化】
+        // 【数据库实例化
         aboxSQLOpenHelper = new AboxSQLOpenHelper(this);
         aboxSQLDatabase = new AboxSQLDatabase(aboxSQLOpenHelper.getWritableDatabase());
         // 【数据表初始化】：存入30个：Key_id(0~29)、Key_Name(“未学习”+id)
         // 【ps】如果当前为第一次使用遥控，需要初始化数据表
         if(!(isUsed())){
             DataInit();
+            // 弹出使用介绍
+            new AlertDialog.Builder(Remote_Activity.this)
+                    .setTitle("短按学习/发射，长按删除")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .show();
         }
-        // 【将数据表中的数据读取到列表中】
+        // 【将数据表中的数据读取到集合中】
         getDataToList();
         // 【初始化配置器】
         gridViewRemoteAdapter = new GridViewRemoteAdapter(this);
         gridViewRemotes =  (GridView) findViewById(R.id.gridViewRemotes);
         gridViewRemotes.setAdapter(gridViewRemoteAdapter);   // 绑定配置器
-        // ============================【为GridView设置监听器】=========================================
-        // 短按进行删除按键的操作
+        // =============================【为GridView设置监听器】====================================
+        /**
+         * 【setOnItemClickListener()方法】：短按进行红外按键学习、测试与命名按键的操作
+         *       如果当前按键之前学过，直接进行红外发射
+         *       如果当前按键之前没有学过，先学习测试，再命名
+         */
         gridViewRemotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // 如果当前按键之前学过，直接进行红外发射
-                // 如果当前按键之前没有学过，先学习测试，再命名
                 if(ifLeant(position)){
-                    Log.v("日志", "已经确定该按键学习过！");
                     Toast.makeText(Remote_Activity.this,"当前按键为：" + String.valueOf(arrayListRemoteButtons.get(position)), Toast.LENGTH_SHORT).show();
                     InfraredTestTask infraredTestTask = new InfraredTestTask(String.valueOf(position));
                     infraredTestTask.execute();
                 }else {
-                    Log.v("日志", "已经确定该按键未学习过！");
                     Toast.makeText(Remote_Activity.this,"当前按键为：" + String.valueOf(position) + "，请使用遥控！", Toast.LENGTH_SHORT).show();
                     InfraredLearnTask infraredLearnTask = new InfraredLearnTask(String.valueOf(position));
                     infraredLearnTask.execute();
@@ -76,16 +88,18 @@ public class Remote_Activity extends AppCompatActivity {
             }
         });
 
-        // 长按进行删除按键的操作
-        // 【ps】先判断：如果已经学习过了，就将数据库中对应的Key_Name的值，更新为“未学习i”
-        //               如果没有学习，只打印“该按键还未学习！”
+        /**
+         * 【setOnItemLongClickListener()方法】：长按进行删除按键的操作
+         *       如果已学习，就将数据库中对应的Key_Name的值，更新为“未学习i”
+         *       如果没有学习，只打印提示信息。
+         */
         gridViewRemotes.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             LayoutInflater inflater = LayoutInflater.from(Remote_Activity.this);
-            final View viewDlg = inflater.inflate(R.layout.dialog_remote_inputfunction,null);
+            //final View viewDlg = inflater.inflate(R.layout.dialog_remote_inputfunction,null);
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if(ifLeant(position)){
-                    // ==================================弹窗（命名）=============================================
+                    // 弹窗
                     LayoutInflater inflater = LayoutInflater.from(Remote_Activity.this);
                     final View viewDlg = inflater.inflate(R.layout.dialog_if_delete,null);
                     final int position_final = position;
@@ -103,11 +117,12 @@ public class Remote_Activity extends AppCompatActivity {
                                             arrayListRemoteButtons.get(position_final), String.valueOf(position_final));
                                     // 数据表删除完成
                                     aboxSQLDatabase.deleteButton(aboxRemoteButtonBean);
-                                    // 获取该值
+                                    // 查询该行，并将删除的行更新到集合中
                                     Cursor cursor = aboxSQLDatabase.queryButton(aboxRemoteButtonBean);
                                     while (cursor.moveToNext()) {
                                         arrayListRemoteButtons.set(position_final, cursor.getString(1));
                                     }
+                                    // 刷新适配器
                                     gridViewRemotes.setAdapter(gridViewRemoteAdapter);
                                     Toast.makeText(Remote_Activity.this,"删除成功", Toast.LENGTH_SHORT).show();
                                 }
@@ -126,8 +141,11 @@ public class Remote_Activity extends AppCompatActivity {
         });
 
     }
-    // ===========================================================================================================
-    // 【判断是否为第一次使用遥控】
+
+    /**
+     * 【isUsed()方法】：判断是否为第一次使用遥控
+     *      利用轻量级存储，本地文件名为"isused"，判断该文件里面存不存在键值对："If_Used"-"NOT_USED"
+     */
     private boolean isUsed(){
         sp = getSharedPreferences("isused", MODE_PRIVATE);  // 文件名："isused"，其中的键：AboxCons.SP_IF_USED
         String str = sp.getString(AboxCons.SP_IF_USED, "NOT_USED"); // 如果不存在，则传入"NOT_USED"
@@ -138,25 +156,31 @@ public class Remote_Activity extends AppCompatActivity {
         }
     }
 
-    // 【第一次使用遥控需要初始化数据表，并生成一个文件】
+    /**
+     * 【DataInit()方法】：第一次使用遥控需要初始化数据表，并生成一个文件
+     */
     private void DataInit() {
         aboxSQLDatabase.insertButton();
         sp.edit().putString(AboxCons.SP_IF_USED, "USED").commit(); // 文件中的值为“USED”
     }
 
-    // 【将数据表中的数据复制到本地列表中】
+    /**
+     * 【getDataToList()方法】：将数据表中的数据复制到本地列表中
+     */
     private void getDataToList(){
         Cursor cursor = aboxSQLDatabase.queryButtons();
         while (cursor.moveToNext()) {
             String key_name = cursor.getString(1);
             arrayListRemoteButtons.add(key_name);
-            Log.v("数据库日志：", "arrayListRemoteButtons：" + key_name);
+            //Log.v("数据库日志：", "arrayListRemoteButtons：" + key_name);
         }
         Log.v("数据库日志：", "数据表中的Key_Name已经保存到本地列表中...");
     }
 
-    // 【判断当前按键是否学习过？】
-    // 【ps】利用按键对应的列表中的值是否等于“key~~”
+    /**
+     * 【ifLeant()方法】：判断当前按键是否学习过？
+     *      【ps】根据传入的position值，判断本地列表中的值是否等于“未学习i”
+     */
     public boolean ifLeant(int position){
         if(arrayListRemoteButtons.get(position).equals("未学习" + String.valueOf(position))){
             return false;
@@ -164,11 +188,13 @@ public class Remote_Activity extends AppCompatActivity {
             return true;
         }
     }
-    // ==========================================================================================================
-    // 【适配器】
-    // 【ps】：创建一个新的类继承BaseAdapter，并重写4个方法
+
+    /**
+     * 【GridViewRemoteAdapter类】：自定义适配器
+     *      【ps】：创建一个新的类继承BaseAdapter，并重写4个方法
+     */
     class GridViewRemoteAdapter extends BaseAdapter{
-        Context context;
+        Context context;  // 上下文
         LayoutInflater layoutInflater;
 
         public GridViewRemoteAdapter(Context context) {
@@ -194,26 +220,37 @@ public class Remote_Activity extends AppCompatActivity {
             return position;
         }
 
-        // 获取每一行Item的显示内容
+        /**
+         * 【getView()方法】：获取每一行Item的显示内容
+         *   【ps】这个getView()方法，我们刷新textView的地方，要想实现实时刷新数据，在每次数据更新后，我们都需要调用一次。
+         *         这里的调用并不是我们真正的亲自调用，而是我们通过绑定适配器的语句后，由安卓系统自动调用该方法。
+         *         当时，我对长按监听与短按监听进行log测试，他们之间好像存在一点区别，
+         *         为何直接利用setText()方法设置文本框的值现象不一样？
+         *         还有gitView()的调用次数有点奇怪，后期深入学习的时候，还需要对这里打断点了解一下。
+         */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null){
                 convertView = layoutInflater.inflate(R.layout.remotes_layout, null); // 布局对象变为View对象【ps】：这里引用的是一个按键的文件
             }
-            Log.v("gridLog", "arrayListRemoteButtons");
+            //Log.v("gridLog", "arrayListRemoteButtons");
 
-            TextView textViewKey;
-            textViewKey = (TextView) convertView.findViewById(R.id.textViewKey);
+            // 遥控按键上面的文本显示
+            TextView textViewKey = (TextView) convertView.findViewById(R.id.textViewKey);
             textViewKey.setText(arrayListRemoteButtons.get(position));
-
+            // 遥控按键的图片显示
             ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewRemoteButton);
             imageView.setImageResource(arrayListRemoteButtons.get(position).equals("未学习" + String.valueOf(position))
                     ? R.drawable.remote_button1a_b  : R.drawable.remote_button1a_a);
+
             return convertView;
         }
     }
-    // ===================================================================================================================
-    // 【红外类】
+
+    /**
+     * 【InfraredLearnTask类】：红外学习
+     *      【ps】需要引入jar包
+     */
     class InfraredLearnTask extends AsyncTask<String, Void, ABRet> {
         private String position;
 
@@ -240,6 +277,10 @@ public class Remote_Activity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 【InfraredTestTask类】：红外发射
+     *      【ps】需要引入jar包
+     */
     class InfraredTestTask extends AsyncTask<String, Void, ABRet> {
         private String position;
 
@@ -259,8 +300,8 @@ public class Remote_Activity extends AppCompatActivity {
 
             if (abRet.getCode().equals("00000")) {
                 Toast.makeText(Remote_Activity.this,"红外发射成功", Toast.LENGTH_SHORT).show();
+                // 如果该按键以及学习过了，弹出dialog
                 if(!(ifLeant(Integer.parseInt(position)))){
-                    // ==================================弹窗（命名）=============================================
                     LayoutInflater inflater = LayoutInflater.from(Remote_Activity.this);
                     final View viewDlg = inflater.inflate(R.layout.dialog_remote_inputfunction,null);
                     new AlertDialog.Builder(Remote_Activity.this)
@@ -282,7 +323,7 @@ public class Remote_Activity extends AppCompatActivity {
                                         arrayListRemoteButtons.set(Integer.parseInt(position), cursor.getString(1));
                                     }
                                     gridViewRemotes.setAdapter(gridViewRemoteAdapter);
-                                    editTextKeyName.setText(arrayListRemoteButtons.get(Integer.parseInt(position)));
+                                    //editTextKeyName.setText(arrayListRemoteButtons.get(Integer.parseInt(position)));
                                 }
                             })
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {

@@ -11,6 +11,9 @@ import com.dhc.absdk.ABRet;
 import com.dhc.absdk.ABSDK;
 
 
+/**
+ * 【门禁页面】：
+ */
 public class DoorActivity extends AppCompatActivity {
     private TextView textViewDoor;   // 【门磁页面】门的状态
     private ImageView imageView;
@@ -26,14 +29,22 @@ public class DoorActivity extends AppCompatActivity {
     private void findView() {
         textViewDoor = (TextView)findViewById(R.id.textViewDoor);
         imageView = (ImageView) findViewById(R.id.imageViewDoor);
+
+        // 实例化门禁对象
+        // 【ps】execute()后面不要写东西
         DoorStatusTask doorStatusTask = new DoorStatusTask();
         doorStatusTask.execute();
     }
 
+    /**
+     * 【DoorStatusTask类】：门禁权限获取、状态获取
+     *      【ps】需要引入jar包
+     */
     class DoorStatusTask extends AsyncTask<Void, Void, ABRet> {
+
         @Override
         protected ABRet doInBackground(Void... Voids) {
-            ABRet abRet = ABSDK.getInstance().getDoorStatus("door");
+            ABRet abRet = ABSDK.getInstance().getDoorStatus(AboxCons.DOOR_DEVICE);
             return abRet;
         }
 
@@ -55,5 +66,4 @@ public class DoorActivity extends AppCompatActivity {
             }
         }
     }
-
 }

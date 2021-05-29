@@ -1,1 +1,1 @@
-include ':app', ':module_demo_0518'
+include ':module_demo_0518'

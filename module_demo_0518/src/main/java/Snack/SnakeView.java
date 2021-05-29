@@ -14,21 +14,22 @@ public class SnakeView extends View implements Runnable{
 
     public boolean isPaused=false;
     public boolean isRunning=true;
-    private int[][] snake=new int[100][2];//100节点总数，第二维下标0代表x坐标，1代表y坐标
-    private int snakeNum;//已经使用的节点数
+    private int[][] snake=new int[100][2]; // 100节点总数，第二维下标0代表x坐标，1代表y坐标
+    private int snakeNum;                  // 已经使用的节点数
     private int direction;
     private final int direction_up=0;
     private final int direction_down=1;
     private final int direction_left=2;
     private final int direction_right=3;
-    private int width=320,height=480;//view的宽高，不是全屏320*480
-    private final int SNAKEWIDTH=5;//单节蛇体宽
+    private int width=320,height=480;       // view的宽高，不是全屏320*480
+    private final int SNAKEWIDTH=5;         // 单节蛇体宽
     private int SLEEP_TIME;
-    private int foodX,foodY;//食物坐标
-    private boolean b=true;//控制食物闪烁
+    private int foodX,foodY;                // 食物坐标
+    private boolean b=true;                 // 控制食物闪烁
     private Random r;
     private Thread t;
     private Paint paint;
+
     public SnakeView(Context context) {
         super(context);
         // TODO Auto-generated constructor stub

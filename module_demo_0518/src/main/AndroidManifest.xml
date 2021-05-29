@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.module_demo_0518">
-
-    <!-- 权限      . -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- 权限设置：intent-filter标签(最高优先级)  -->
+    <!-- 注意：标签activity中的names属性中的“.”与“不带.”直接带上包名-->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/app_pat"
@@ -23,12 +23,9 @@
         <activity android:name=".DoorActivity" />
         <activity android:name=".SelectiveSensorActivity" />
         <activity android:name=".TempAndHumidityActivity" />
-        <activity android:name=".SocketActivity" />
-        <activity android:name=".ListDemoActivity" />
         <activity android:name=".Remote_Activity"></activity>
         <activity android:name=".Socket_many_Activity" />
         <activity android:name=".ColoredEggsActivity"></activity>
         <activity android:name="Snack.MainSnackActivity"></activity>
     </application>
-
 </manifest>

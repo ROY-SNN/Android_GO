@@ -3,7 +3,7 @@ package Snack;
 import java.util.LinkedList;
 import java.util.List;
 
-//蛇
+// 蛇
 public class SnakeBean {
     private List<PointBean> pointBeanList = new LinkedList<>();
 

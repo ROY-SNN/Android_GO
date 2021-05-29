@@ -18,6 +18,7 @@ public class AboxSQLOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // 创建数据表
         String sql = "create table " + AboxCons.TABLE_NAME +  "(" + AboxCons.Field_NAME1  + " varchar(20) not null , "
                 + AboxCons.Field_NAME2 + " varchar(60) not null );";
         db.execSQL(sql);

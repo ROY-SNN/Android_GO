@@ -10,8 +10,6 @@ import android.view.View;
 
 import java.util.List;
 
-//import androidx.annotation.Nullable;
-
 public class GameView extends View {
     private GridBean gridBean;
     private SnakeBean snakeBean;
@@ -19,20 +17,21 @@ public class GameView extends View {
     PointBean food;
     int x;
     int y;
-     Control control;
+    Control control;
+
     private void init(){
-        System.out.println("初始化蛇。。");
         x = (int) (Math.random()*10);
         y = (int) (Math.random()*10);
         control = Control.UP;
-        gridBean = new GridBean();  //初始化背景
-        snakeBean = new SnakeBean(); //初始化蛇
+        gridBean = new GridBean();   // 初始化背景
+        snakeBean = new SnakeBean(); // 初始化蛇
         PointBean pointBean = new PointBean(gridBean.getGridSize()/2,gridBean.getGridSize()/2);
         snakeBean.getPointBeanList().add(pointBean);
         snakeBean.getPointBeanList().add(pointBean);
         snakeBean.getPointBeanList().add(pointBean);
         mPaint = new Paint();
     }
+
     public GameView(Context context) {
         super(context);
         init();
@@ -60,10 +59,9 @@ public class GameView extends View {
             y = (int) (Math.random()*10);
             refreshView(true);
         }
-
-
     }
-    //画蛇
+
+    // 画蛇
     private void drawSnake(Canvas canvas){
         List<PointBean> list = snakeBean.getPointBeanList();
         for (PointBean pointBean : list){
@@ -74,9 +72,10 @@ public class GameView extends View {
             canvas.drawRect(startX, startY, stopX, stopY, mPaint);
         }
     }
-    //画格子
+
+    // 画格子
     private void drawGrid(Canvas canvas){
-        //画竖线
+        // 画竖线
         for (int i = 0;i <= gridBean.getGridSize();i++){
             int startX = gridBean.getOffset()+gridBean.getGridWidth()*i;
             int stopX = startX;
@@ -84,7 +83,7 @@ public class GameView extends View {
             int stopY = startY + gridBean.getLineLength();
             canvas.drawLine(startX,startY,stopX,stopY,mPaint);
         }
-        //画横线
+        // 画横线
         for (int j = 0;j<=gridBean.getGridSize();j++){
             int startX = gridBean.getOffset();
             int stopX = gridBean.getOffset()+gridBean.getLineLength();
@@ -93,7 +92,8 @@ public class GameView extends View {
             canvas.drawLine(startX,startY,stopX,stopY,mPaint);
         }
     }
-    //蛇移动实现
+
+    // 蛇移动实现
     public void refreshView(boolean isAdd){
         List<PointBean> pointBeanList = snakeBean.getPointBeanList();
         PointBean pointBean = pointBeanList.get(0);
@@ -107,7 +107,7 @@ public class GameView extends View {
         }else if (control == Control.DOWN){
             pointBean1 = new PointBean(pointBean.getX(),pointBean.getY()+1);
         }
-        if (pointBean1 !=null){
+        if (pointBean1 != null){
             pointBeanList.add(0,pointBean1);
             if (!isAdd){
                 pointBeanList.remove(pointBeanList.get(pointBeanList.size()-1));
@@ -118,9 +118,9 @@ public class GameView extends View {
         }else {
             postInvalidate();
         }
-
     }
-    //是否死亡
+
+    // 是否死亡
     public boolean isDead(List<PointBean> pointBeanList){
         PointBean pointBean = pointBeanList.get(0);
         if (pointBean.getY()==-1&&control== Control.UP){
@@ -135,9 +135,8 @@ public class GameView extends View {
         return false;
     }
 
-    //画食物
+    // 画食物
     public void food(Canvas canvas){
-
         food = new PointBean(x,y);
         int startX = gridBean.getOffset() + gridBean.getGridWidth() * food.getX();
         int stopX = startX + gridBean.getGridWidth();
@@ -145,11 +144,12 @@ public class GameView extends View {
         int stopY = startY + +gridBean.getGridWidth();
         canvas.drawRect(startX, startY, stopX, stopY, mPaint);
     }
-    //吃食物
+
+    // 吃食物
     boolean isEat(SnakeBean list){
         int eatX = list.getPointBeanList().get(0).getX();
         int eatY = list.getPointBeanList().get(0).getY();
-        if (eatX==x&&eatY==y){
+        if (eatX==x && eatY==y){
             return true;
         }
         return false;

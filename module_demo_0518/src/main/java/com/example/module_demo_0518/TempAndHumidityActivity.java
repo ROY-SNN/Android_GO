@@ -8,6 +8,9 @@ import android.widget.Toast;
 import com.dhc.absdk.ABRet;
 import com.dhc.absdk.ABSDK;
 
+/**
+ * 【TempAndHumidityActivity类】：温湿度页面
+ */
 public class TempAndHumidityActivity extends AppCompatActivity {
     private TextView textViewTemp;
     private TextView textViewHumidity;
@@ -27,11 +30,15 @@ public class TempAndHumidityActivity extends AppCompatActivity {
         textViewHumidity = (TextView) findViewById(R.id.textViewHum);
     }
 
+    /**
+     * 【THStatusTask类】：温湿度
+     *      【ps】需要引入jar包
+     */
     class THStatusTask extends AsyncTask<Void, Void, ABRet> {
 
         @Override
         protected ABRet doInBackground(Void... Voids) {
-            ABRet abRet = ABSDK.getInstance().getThStatus("TH1");
+            ABRet abRet = ABSDK.getInstance().getThStatus(AboxCons.TEMP_HUMIDITY_DEVICE);
             return abRet;
         }
 
@@ -39,19 +46,14 @@ public class TempAndHumidityActivity extends AppCompatActivity {
         protected void onPostExecute(ABRet abRet) {
             super.onPostExecute(abRet);
 
-            double inum;
             if (abRet.getCode().equals("00000")){
-                Toast.makeText(TempAndHumidityActivity.this,"温湿度获取成功", Toast.LENGTH_SHORT).show();
-                String temp = abRet.getDicDatas().get("temperature").toString();
-                String humidity = abRet.getDicDatas().get("humidity").toString();
-                textViewTemp.setText(temp);
-                inum = Double.parseDouble(temp);
-                if(inum > 26.0){
-                    Toast.makeText(TempAndHumidityActivity.this,"哎呦~~不粗哦！",Toast.LENGTH_SHORT).show();
+                textViewTemp.setText(abRet.getDicDatas().get("temperature").toString());
+                textViewHumidity.setText(abRet.getDicDatas().get("humidity").toString());
+                if(Double.parseDouble(abRet.getDicDatas().get("temperature").toString()) > 26.0){
+                    Toast.makeText(TempAndHumidityActivity.this,"有一点小热",Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(TempAndHumidityActivity.this,"哎呦~~不粗哦！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TempAndHumidityActivity.this,"哎呦~~不粗哦，温度很舒适！",Toast.LENGTH_SHORT).show();
                 }
-                textViewHumidity.setText(humidity);
             }else{
                 Toast.makeText(TempAndHumidityActivity.this,"温湿度获取失败"+abRet.getCode(),Toast.LENGTH_SHORT).show();
             }

@@ -115,7 +115,7 @@
                 android:weightSum="1">
 
                 <CheckBox
-                    android:id="@+id/checkBox"
+                    android:id="@+id/checkBoxAutoLogin"
                     android:layout_width="115dp"
                     android:layout_height="wrap_content"
                     android:text="自动登录"

@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+
+/**
+ * 【ColoredEggsActivity类】：主页面的侧滑菜单中“关于我们”的页面
+ */
 public class ColoredEggsActivity extends AppCompatActivity {
     private boolean flag = true;
 

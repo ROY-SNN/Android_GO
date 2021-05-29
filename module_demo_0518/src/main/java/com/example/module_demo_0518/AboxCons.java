@@ -6,25 +6,30 @@ import java.util.HashMap;
  * 【AboxCons常量类】：用于集中存放各种常量名称
  */
 public class AboxCons {
-    // =========================Preferences文件中的键名=========================
+    // ========================Preferences文件中的键名=========================
+    // 【ps】文件中的数据：键值对的存储方法
     public static String SP_USER_NAME = "name";            // 记住用户名
     public static String SP_USER_PSD  = "pwd";             // 记住密码
-    //public static String SP_AUTO_LOGIN  = "auto_login";  // 自动登录
+    public static String SP_AUTO_LOGIN  = "auto_login";    // 自动登录
     public static String SP_IF_USED = "If_Used";           // 是否为第一次使用遥控设备
 
-    // ==============================传感器设备名称==============================
+    // ==============================传感器设备名称=============================
+    // 【ps】注意每个设备的实际命名情况，需要登录网页的控制台查看
     public static String TEMP_HUMIDITY_DEVICE = "TH1";   // 温湿度传感器名称
-    public static String SOCKET_DEVICE = "s1";           // 插座名称
+    public static String SOCKET_DEVICE1 = "s1";           // 插座名称1
+    public static String SOCKET_DEVICE2 = "s2";           // 插座名称2
     public static String DOOR_DEVICE = "door";           // 门磁传感器名称
     public static String INFRARED_DEVICE = "HW";         // 红外设备名称
 
-    // ===========================数据库的相关变量名=============================
+    // ===========================数据库的相关变量名============================
+    // 【ps】存放学习的遥控按键，2个字段
     public static String DATABASES_NAME = "Database052566";  // 数据库名称
     public static String TABLE_NAME = "Table_HW";            // 数据表的名称
     public static String Field_NAME1 = "Key_id";             // 字段0的名称
     public static String Field_NAME2 = "Key_Name";           // 字段1的名称
 
-    // ==========================打印报错代码对应的原因==========================
+    // ==========================打印报错代码对应的原因=========================
+    // 【ps】根据提供的接口手册，查看函数返回值中Code对应错误原因
     public static HashMap<String,String> errorMap = new HashMap<String,String>();
     {
         errorMap.put("00000","处理成功");
