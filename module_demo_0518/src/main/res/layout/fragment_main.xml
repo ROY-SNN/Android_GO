@@ -14,27 +14,29 @@
         android:id="@+id/textViewStauts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="35dp"
         android:text="插座状态"
-        android:layout_above="@+id/buttonSocketInFragment"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/imageViewButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp" />
 
     <Button
         android:id="@+id/buttonSocketInFragment"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="改变开关状态"
+        android:text="打 开/关 闭"
+        android:textSize="20dp"
         android:onClick="onClickButton"
-        android:layout_marginBottom="112dp"
-        android:layout_alignParentBottom="true"
+        android:background="@drawable/btn_all_shape"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/textViewStauts"
         android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/imageViewButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         app:srcCompat="@drawable/sock_on"
-        android:layout_above="@+id/textViewStauts"
+        android:layout_marginTop="117dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

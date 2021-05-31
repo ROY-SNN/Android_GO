@@ -147,7 +147,8 @@ public class LoginActivity extends AppCompatActivity {
                             .commit();
                 }
                 // 利用Intent进行页面跳转
-                Intent intent = new Intent(LoginActivity.this, SelectiveSensorActivity.class);
+                //Intent intent = new Intent(LoginActivity.this, SelectiveSensorActivity.class);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 //intent.putExtra("userName", editTextUserName.getText().toString());
                 startActivity(intent);
             }else{

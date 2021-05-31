@@ -7,5 +7,9 @@
     <string name="weight">请输入体重(公斤)</string>
     <string name="height">请输入身高(cm)</string>
 
+    <string name="navigation_drawer_open">打开导航抽屉</string>
+    <string name="navigation_drawer_close">关闭导航抽屉</string>
+
+    <string name="action_settings">设置</string>
 
 </resources>

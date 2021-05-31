@@ -3,7 +3,9 @@ package com.example.module_demo_0518;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +18,9 @@ import com.dhc.absdk.ABSDK;
  */
 public class DoorActivity extends AppCompatActivity {
     private TextView textViewDoor;   // 【门磁页面】门的状态
-    private ImageView imageView;
+    private LinearLayout layout;
+
+    //private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +32,9 @@ public class DoorActivity extends AppCompatActivity {
 
     private void findView() {
         textViewDoor = (TextView)findViewById(R.id.textViewDoor);
-        imageView = (ImageView) findViewById(R.id.imageViewDoor);
+        //imageView = (ImageView) findViewById(R.id.imageViewDoor);
+        layout = (LinearLayout) findViewById(R.id.layout_view);
+
 
         // 实例化门禁对象
         // 【ps】execute()后面不要写东西
@@ -58,7 +64,8 @@ public class DoorActivity extends AppCompatActivity {
                 }else{
                     textViewDoor.setText("开启");
                 }
-                imageView.setImageResource(door_status.equals("0") ? R.drawable.door_off  : R.drawable.door_on);
+                layout.setBackgroundResource(door_status.equals("0") ? R.drawable.door_close  : R.drawable.door_open);
+                //imageView.setImageResource(door_status.equals("0") ? R.drawable.door_close  : R.drawable.door_open);
                 Toast.makeText(DoorActivity.this,"门禁状态获取成功", Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(DoorActivity.this,"门禁状态获取失败" + abRet.getCode(),
