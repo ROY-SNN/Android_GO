@@ -23,7 +23,6 @@ defaultConfig {
     }
 ```
 
-
 ### dependencies
 
 ```xml
@@ -41,6 +40,20 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 ```
+
+## 主要页面的大致流程图
+
+![](https://static01.imgkr.com/temp/5fb4a17bac7743fcb01576e9e21ae8af.jpg)
+
+![](https://static01.imgkr.com/temp/464459f060164c2d840fd93d44f17151.jpg)
+
+![](https://static01.imgkr.com/temp/9227d20c273a4bac9e5f1f741e33ee38.jpg)
+
+![](https://static01.imgkr.com/temp/70de0a317713476ab46db75daae48983.jpg)
+
+![](https://static01.imgkr.com/temp/e51559c380644b17bea538d03fb4c4ef.jpg)
+
+
 
 # ===================================
 # 2021.05.18：登录页面的设计流程
