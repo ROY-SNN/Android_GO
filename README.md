@@ -5,7 +5,7 @@
 #### 生产实习2021.05.17~2021.05.25的内容
 
 ## 常用的网站资源：
-[【常用网站资源】](http://www.lysblog.cn:8080/blog/69"")    
+[【常用网站资源】http://www.lysblog.cn:8080/blog/69](http://www.lysblog.cn:8080/blog/69) 
 
 ### 版本情况
 
